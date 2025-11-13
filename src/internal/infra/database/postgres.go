@@ -2,6 +2,9 @@ package database
 
 import (
 	"context"
+	"easy-queue-go/src/internal/config"
+	"easy-queue-go/src/internal/infra"
+	"easy-queue-go/src/internal/log"
 	"fmt"
 	"time"
 
@@ -9,25 +12,13 @@ import (
 	"go.uber.org/zap"
 )
 
-// Config holds the database configuration
-type Config struct {
-	Host     string
-	Port     int
-	User     string
-	Password string
-	Database string
-	MaxConns int32
-	MinConns int32
-}
-
 // Client represents a PostgreSQL database client
 type Client struct {
-	pool   *pgxpool.Pool
-	logger *zap.Logger
+	pool *pgxpool.Pool
 }
 
 // NewClient creates a new PostgreSQL client with connection pooling
-func NewClient(ctx context.Context, cfg Config, logger *zap.Logger) (*Client, error) {
+func NewClient(ctx context.Context, cfg *config.DBConfig) (infra.IDataBase, error) {
 	// Build connection string
 	connString := fmt.Sprintf(
 		"postgres://%s:%s@%s:%d/%s?sslmode=disable",
@@ -63,15 +54,14 @@ func NewClient(ctx context.Context, cfg Config, logger *zap.Logger) (*Client, er
 		return nil, fmt.Errorf("failed to ping database: %w", err)
 	}
 
-	logger.Info("Database connection established",
+	log.Info(ctx, "Database connection established",
 		zap.String("host", cfg.Host),
 		zap.Int("port", cfg.Port),
 		zap.String("database", cfg.Database),
 	)
 
 	return &Client{
-		pool:   pool,
-		logger: logger,
+		pool: pool,
 	}, nil
 }
 
@@ -84,7 +74,6 @@ func (c *Client) Pool() *pgxpool.Pool {
 func (c *Client) Close() {
 	if c.pool != nil {
 		c.pool.Close()
-		c.logger.Info("Database connection closed")
 	}
 }
 

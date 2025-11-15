@@ -103,127 +103,127 @@ cfg := config.LoadDatabaseConfig()
 
 #### `/src/internal/infra/`
 
-**Responsabilidade:** Camada de infraestrutura e integrações externas.
+**Responsibility:** Infrastructure layer and external integrations.
 
 ##### `/src/internal/infra/database/`
 
-Implementações de clientes de banco de dados.
+Database client implementations.
 
-- `postgres.go` - Cliente PostgreSQL com:
+- `postgres.go` - PostgreSQL client with:
   - Connection pooling
   - Health checks
-  - Reconexão automática
-  - Estatísticas do pool
+  - Automatic reconnection
+  - Pool statistics
 
-**Recursos:**
-- ✅ Pool de conexões configurável
-- ✅ Health checks automáticos
+**Features:**
+- ✅ Configurable connection pool
+- ✅ Automatic health checks
 - ✅ Graceful shutdown
-- ✅ Logging estruturado
+- ✅ Structured logging
 
 ##### `/src/internal/infra/interfaces.go`
 
-Define interfaces para abstrair implementações de infraestrutura.
+Defines interfaces to abstract infrastructure implementations.
 
 #### `/src/internal/log/`
 
-**Responsabilidade:** Sistema de logging estruturado.
+**Responsibility:** Structured logging system.
 
-- `logger.go` - Wrapper do Zap logger com configurações customizadas
+- `logger.go` - Zap logger wrapper with custom configurations
 
-**Níveis de log suportados:**
-- `DEBUG` - Informações detalhadas para debugging
-- `INFO` - Informações gerais sobre a execução
-- `WARN` - Avisos que não impedem a execução
-- `ERROR` - Erros que afetam funcionalidades
-- `FATAL` - Erros críticos que encerram a aplicação
+**Supported log levels:**
+- `DEBUG` - Detailed information for debugging
+- `INFO` - General information about execution
+- `WARN` - Warnings that don't prevent execution
+- `ERROR` - Errors that affect functionality
+- `FATAL` - Critical errors that terminate the application
 
 #### `/src/internal/singletons/`
 
-**Responsabilidade:** Gerenciamento de instâncias singleton.
+**Responsibility:** Singleton instance management.
 
-- `initializer.go` - Inicialização e gerenciamento de recursos compartilhados
+- `initializer.go` - Initialization and management of shared resources
 
 #### `/src/internal/tracing/`
 
-**Responsabilidade:** Instrumentação de tracing distribuído com OpenTelemetry.
+**Responsibility:** Distributed tracing instrumentation with OpenTelemetry.
 
-- `tracer.go` - Inicialização e configuração do OpenTelemetry
-- `config.go` - Carregamento de configurações de tracing
+- `tracer.go` - OpenTelemetry initialization and configuration
+- `config.go` - Loading tracing configurations
 
-**Recursos:**
-- ✅ Tracing automático de requisições HTTP
-- ✅ Suporte a spans customizados
-- ✅ Integração com Jaeger
+**Features:**
+- ✅ Automatic HTTP request tracing
+- ✅ Custom span support
+- ✅ Jaeger integration
 - ✅ Context propagation (W3C Trace Context)
-- ✅ Configuração via variáveis de ambiente
+- ✅ Configuration via environment variables
 
-**Exemplo de uso:**
+**Usage example:**
 ```go
-tracer := tracing.Tracer("meu-componente")
-ctx, span := tracer.Start(ctx, "MinhaOperacao")
+tracer := tracing.Tracer("my-component")
+ctx, span := tracer.Start(ctx, "MyOperation")
 defer span.End()
 ```
 
 ### `/configs/`
 
-Arquivos de configuração estática da aplicação (YAML, JSON, etc.).
+Static application configuration files (YAML, JSON, etc.).
 
 ### `/docs/`
 
-Documentação completa do projeto usando Docsify.
+Complete project documentation using Docsify.
 
-**Estrutura:**
-- `index.html` - Configuração do Docsify e estilos CSS
-- `README.md` - Página inicial
-- `_sidebar.md` - Menu de navegação lateral
-- Subdiretórios organizados por tópico
+**Structure:**
+- `index.html` - Docsify configuration and CSS styles
+- `README.md` - Home page
+- `_sidebar.md` - Sidebar navigation menu
+- Subdirectories organized by topic
 
 ### `/docs_old/`
 
-Documentação legada mantida para referência histórica.
+Legacy documentation maintained for historical reference.
 
-## 🏗️ Arquitetura
+## 🏗️ Architecture
 
-O EasyQueue segue uma arquitetura em camadas:
+EasyQueue follows a layered architecture:
 
 ```
 ┌─────────────────────────────────────┐
-│         Camada de Entrada           │
+│         Entry Layer                 │
 │         (cmd/main.go)               │
 └──────────────┬──────────────────────┘
                │
 ┌──────────────▼──────────────────────┐
-│      Camada de Configuração         │
+│      Configuration Layer            │
 │         (config/)                   │
 └──────────────┬──────────────────────┘
                │
 ┌──────────────▼──────────────────────┐
-│      Camada de Negócio              │
+│      Business Layer                 │
 │      (domain/, usecases/)           │
-│         [EM DESENVOLVIMENTO]        │
+│         [IN DEVELOPMENT]            │
 └──────────────┬──────────────────────┘
                │
 ┌──────────────▼──────────────────────┐
-│    Camada de Infraestrutura         │
+│    Infrastructure Layer             │
 │         (infra/)                    │
 │  • Database (PostgreSQL)            │
 │  • Logging (Zap)                    │
-│  • Cache (Redis) [FUTURO]           │
+│  • Cache (Redis) [FUTURE]           │
 └─────────────────────────────────────┘
 ```
 
-## 📝 Convenções de Código
+## 📝 Code Conventions
 
-### Nomenclatura
+### Naming
 
-- **Arquivos:** `snake_case.go`
-- **Pacotes:** `lowercase` (sem underscores)
-- **Tipos/Structs:** `PascalCase`
-- **Funções/Métodos:** `PascalCase` (exportados) ou `camelCase` (privados)
-- **Constantes:** `PascalCase` ou `UPPER_SNAKE_CASE`
+- **Files:** `snake_case.go`
+- **Packages:** `lowercase` (no underscores)
+- **Types/Structs:** `PascalCase`
+- **Functions/Methods:** `PascalCase` (exported) or `camelCase` (private)
+- **Constants:** `PascalCase` or `UPPER_SNAKE_CASE`
 
-### Organização de Imports
+### Import Organization
 
 ```go
 import (
@@ -241,11 +241,11 @@ import (
 )
 ```
 
-### Comentários
+### Comments
 
-- Funções exportadas devem ter comentários de documentação
-- Use `//` para comentários de linha única
-- Use `/* */` para comentários de bloco
+- Exported functions must have documentation comments
+- Use `//` for single-line comments
+- Use `/* */` for block comments
 
 ```go
 // NewPostgresClient creates a new PostgreSQL client with connection pooling.
@@ -255,45 +255,45 @@ func NewPostgresClient(cfg *config.DatabaseConfig) (*PostgresClient, error) {
 }
 ```
 
-## 🔄 Fluxo de Inicialização
+## 🔄 Initialization Flow
 
-1. **main.go** - Ponto de entrada
-2. **config/initializer.go** - Carrega configurações
-3. **log/logger.go** - Inicializa logger
-4. **singletons/initializer.go** - Cria instâncias compartilhadas
-5. **infra/database/postgres.go** - Conecta ao banco de dados
-6. **Aplicação pronta** - Aguarda requisições
+1. **main.go** - Entry point
+2. **config/initializer.go** - Load configurations
+3. **log/logger.go** - Initialize logger
+4. **singletons/initializer.go** - Create shared instances
+5. **infra/database/postgres.go** - Connect to database
+6. **Application ready** - Await requests
 
-## 🚀 Próximas Implementações
+## 🚀 Future Implementations
 
-Estrutura planejada para futuras features:
+Planned structure for future features:
 
 ```
 src/internal/
-├── domain/              # Entidades de domínio
+├── domain/              # Domain entities
 │   ├── user.go
 │   ├── business.go
 │   ├── queue.go
 │   └── appointment.go
 │
-├── repository/          # Camada de persistência
+├── repository/          # Persistence layer
 │   ├── user_repository.go
 │   └── queue_repository.go
 │
-├── usecase/            # Casos de uso / Lógica de negócio
+├── usecase/            # Use cases / Business logic
 │   ├── queue_usecase.go
 │   └── checkin_usecase.go
 │
-├── handler/            # Handlers HTTP
+├── handler/            # HTTP handlers
 │   ├── queue_handler.go
 │   └── user_handler.go
 │
-└── middleware/         # Middlewares HTTP
+└── middleware/         # HTTP middlewares
     ├── auth.go
     └── logging.go
 ```
 
-## 📚 Referências
+## 📚 References
 
 - [Go Project Layout](https://github.com/golang-standards/project-layout)
 - [Clean Architecture](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html)
@@ -301,4 +301,4 @@ src/internal/
 
 ---
 
-**Dica:** Mantenha a estrutura organizada e siga as convenções para facilitar a manutenção e colaboração! 🎯
+**Tip:** Keep the structure organized and follow conventions to facilitate maintenance and collaboration! 🎯

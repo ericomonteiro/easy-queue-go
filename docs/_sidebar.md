@@ -16,8 +16,10 @@
   * [👥 Multi-Role Support](features/multi-role-support.md)
 
 * **API**
+  * [📚 Swagger UI](api/swagger-ui.md)
   * [👥 Users API](api/users.md)
   * [🔑 Authentication API](api/authentication.md)
+  * [📖 Swagger Guide](api/swagger.md)
 
 * **Product**
   * [🎯 Vision](product/overview.md)

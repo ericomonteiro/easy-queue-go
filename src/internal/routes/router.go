@@ -1,12 +1,15 @@
 package routes
 
 import (
+	_ "easy-queue-go/docs" // Import generated docs
 	"easy-queue-go/src/internal/handlers"
 	"easy-queue-go/src/internal/middleware"
 	"easy-queue-go/src/internal/models"
 	"easy-queue-go/src/internal/services"
 
 	"github.com/gin-gonic/gin"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 	"go.opentelemetry.io/contrib/instrumentation/github.com/gin-gonic/gin/otelgin"
 )
 
@@ -27,6 +30,9 @@ func SetupRouter(
 
 	// Public routes
 	router.GET("/health", handlers.HealthCheck)
+
+	// Swagger documentation
+	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	// Auth routes (public)
 	authGroup := router.Group("/auth")

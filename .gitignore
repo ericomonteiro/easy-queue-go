@@ -49,3 +49,6 @@ temp/
 Thumbs.db
 ehthumbs.db
 Desktop.ini
+
+# Swagger generated files (keep swagger.json and swagger.yaml for Docsify)
+docs/docs.go

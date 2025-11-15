@@ -8,6 +8,13 @@
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-17-336791?style=for-the-badge&logo=postgresql)](https://www.postgresql.org)
 [![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?style=for-the-badge&logo=docker)](https://www.docker.com)
 
+## 🎥 Product Demo
+
+<video width="100%" controls style="border-radius: 8px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); margin: 20px 0;">
+  <source src="videos/product_demo.mp4" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
+
 ## ✨ Key Features
 
 - 🔐 **JWT Authentication** - Secure stateless authentication with access and refresh tokens
@@ -132,6 +139,7 @@ docker-compose down -v
 
 ## 🎯 Next Steps
 
+- 📚 Try the [Interactive API Documentation (Swagger UI)](api/swagger-ui.md)
 - 🔐 Learn about [Authentication & Authorization](features/authentication.md)
 - 👥 Discover [Multi-Role Support](features/multi-role-support.md)
 - 📖 Explore the [API documentation](api/authentication.md)

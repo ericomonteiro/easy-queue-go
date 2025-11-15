@@ -14,6 +14,25 @@ import (
 	"go.uber.org/zap"
 )
 
+// @title Easy Queue API
+// @version 1.0
+// @description API for Easy Queue - A queue management system
+// @termsOfService http://swagger.io/terms/
+
+// @contact.name API Support
+// @contact.email support@easyqueue.com
+
+// @license.name MIT
+// @license.url https://opensource.org/licenses/MIT
+
+// @host localhost:8080
+// @BasePath /api/v1
+
+// @securityDefinitions.apikey BearerAuth
+// @in header
+// @name Authorization
+// @description Type "Bearer" followed by a space and JWT token.
+
 func main() {
 	// Load environment variables from .env file
 	if err := config.LoadEnvFile(); err != nil {

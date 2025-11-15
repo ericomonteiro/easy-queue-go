@@ -13,7 +13,14 @@ type HealthResponse struct {
 	Service   string    `json:"service"`
 }
 
-// HealthCheck returns the application health status
+// HealthCheck godoc
+// @Summary Health check endpoint
+// @Description Returns the health status of the application
+// @Tags health
+// @Accept json
+// @Produce json
+// @Success 200 {object} HealthResponse
+// @Router /health [get]
 func HealthCheck(c *gin.Context) {
 	response := HealthResponse{
 		Status:    "healthy",

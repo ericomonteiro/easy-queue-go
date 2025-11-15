@@ -154,11 +154,29 @@ Powered by **Zap**:
 - Multiple log levels (DEBUG, INFO, WARN, ERROR, FATAL)
 - JSON output for production environments
 
+### 📚 API Documentation (Swagger)
+
+Interactive API documentation with **Swagger/OpenAPI**:
+- **Auto-generated** from code comments
+- **Interactive UI** for testing endpoints
+- **Complete API specification** in JSON/YAML format
+- **Integrated with Docsify** - View in documentation site
+- Access standalone at: http://localhost:8080/swagger/index.html
+- Access in docs at: https://ericomonteiro.github.io/easy-queue-go/#/api/swagger-ui
+
+Generate/update documentation:
+```bash
+make swagger-generate
+```
+
+📖 See [docs/api/swagger.md](docs/api/swagger.md) for detailed Swagger documentation.
+
 ## API Endpoints
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
 | GET    | `/health` | Health check endpoint |
+| GET    | `/swagger/*any` | Swagger UI documentation |
 
 ## Development
 
@@ -170,6 +188,7 @@ Powered by **Zap**:
 - **Zap** - Structured logging
 - **OpenTelemetry** - Distributed tracing
 - **Jaeger** - Trace visualization
+- **Swaggo** - Swagger/OpenAPI documentation
 - **PostgreSQL 17** - Database
 - **godotenv** - Environment variable management
 
@@ -199,6 +218,7 @@ docker-compose down -v
 
 - 📖 [Project Structure](docs/project-structure.md) - Detailed architecture and code organization
 - 📖 [Tracing Quickstart](TRACING_QUICKSTART.md) - OpenTelemetry and Jaeger setup
+- 📖 [Swagger Documentation](docs/api/swagger.md) - API documentation with Swagger/OpenAPI
 - 📖 [Database Schema](docs/database/schema.md) - Database design and migrations
 - 📖 [Product Overview](docs/product/overview.md) - Product vision and features
 

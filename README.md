@@ -1,5 +1,7 @@
 # Easy Queue Go
 
+[Documentation](https://ericomonteiro.github.io/easy-queue-go/#/)
+
 A Go-based queue management system with PostgreSQL, featuring distributed tracing and a modern REST API.
 
 ## Prerequisites

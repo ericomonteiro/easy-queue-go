@@ -2,6 +2,23 @@
 
 Este guia irá ajudá-lo a configurar e executar o EasyQueue em sua máquina local.
 
+## 📑 Índice
+
+- [Pré-requisitos](#📋-pré-requisitos)
+- [Instalação](#📥-instalação)
+  - [1. Clone o Repositório](#1-clone-o-repositório)
+  - [2. Configure o Banco de Dados](#2-configure-o-banco-de-dados)
+  - [3. Configure as Variáveis de Ambiente](#3-configure-as-variáveis-de-ambiente)
+  - [4. Instale as Dependências](#4-instale-as-dependências)
+  - [5. Execute a Aplicação](#5-execute-a-aplicação)
+- [Verificação](#✅-verificação)
+- [Parando a Aplicação](#🛑-parando-a-aplicação)
+- [Solução de Problemas](#🔧-solução-de-problemas)
+- [Próximos Passos](#📚-próximos-passos)
+- [Dicas de Desenvolvimento](#💡-dicas-de-desenvolvimento)
+
+---
+
 ## 📋 Pré-requisitos
 
 Antes de começar, certifique-se de ter instalado:

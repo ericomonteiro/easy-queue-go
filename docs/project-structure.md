@@ -2,6 +2,23 @@
 
 Esta página descreve a organização de arquivos e diretórios do EasyQueue.
 
+## 📑 Índice
+
+- [Visão Geral](#🌳-visão-geral)
+- [Descrição dos Diretórios](#📦-descrição-dos-diretórios)
+  - [/src/internal/](#srcinternal)
+  - [/src/internal/cmd/](#srcinternalcmd)
+  - [/src/internal/config/](#srcinternalconfig)
+  - [/src/internal/infra/](#srcinternalinfra)
+  - [/src/internal/log/](#srcinternallog)
+  - [/src/internal/singletons/](#srcinternalsingletons)
+  - [/src/internal/tracing/](#srcinternaltracing)
+- [Arquivos de Configuração](#⚙️-arquivos-de-configuração)
+- [Convenções de Código](#📝-convenções-de-código)
+- [Padrões Arquiteturais](#🏗️-padrões-arquiteturais)
+
+---
+
 ## 🌳 Visão Geral
 
 ```
@@ -46,8 +63,18 @@ easy-queue-go/
         ├── log/                 # Sistema de logging
         │   └── logger.go        # Logger estruturado (Zap)
         │
-        └── singletons/          # Instâncias singleton
-            └── initializer.go   # Inicialização de singletons
+        ├── routes/              # Configuração de rotas
+        │   └── router.go        # Setup do router Gin
+        │
+        ├── handlers/            # Handlers HTTP
+        │   └── health_handler.go # Health check endpoint
+        │
+        ├── singletons/          # Instâncias singleton
+        │   └── initializer.go   # Inicialização de singletons
+        │
+        └── tracing/             # Tracing distribuído
+            ├── tracer.go        # Inicialização OpenTelemetry
+            └── config.go        # Configuração de tracing
 ```
 
 ## 📦 Descrição dos Diretórios
@@ -116,6 +143,27 @@ Define interfaces para abstrair implementações de infraestrutura.
 **Responsabilidade:** Gerenciamento de instâncias singleton.
 
 - `initializer.go` - Inicialização e gerenciamento de recursos compartilhados
+
+#### `/src/internal/tracing/`
+
+**Responsabilidade:** Instrumentação de tracing distribuído com OpenTelemetry.
+
+- `tracer.go` - Inicialização e configuração do OpenTelemetry
+- `config.go` - Carregamento de configurações de tracing
+
+**Recursos:**
+- ✅ Tracing automático de requisições HTTP
+- ✅ Suporte a spans customizados
+- ✅ Integração com Jaeger
+- ✅ Context propagation (W3C Trace Context)
+- ✅ Configuração via variáveis de ambiente
+
+**Exemplo de uso:**
+```go
+tracer := tracing.Tracer("meu-componente")
+ctx, span := tracer.Start(ctx, "MinhaOperacao")
+defer span.End()
+```
 
 ### `/configs/`
 

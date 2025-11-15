@@ -85,9 +85,29 @@ To remove the database volume as well:
 docker-compose down -v
 ```
 
+## Features
+
+### 🔍 Distributed Tracing
+
+The application includes OpenTelemetry tracing with Jaeger:
+
+- **Automatic HTTP tracing** for all routes
+- **Custom span support** for business logic
+- **Jaeger UI** for visualization at http://localhost:16686
+
+Quick start:
+```bash
+docker-compose up -d jaeger
+go run src/internal/cmd/main.go
+```
+
+📖 See [TRACING_QUICKSTART.md](TRACING_QUICKSTART.md) for more details.
+
 ## Development
 
 The application uses:
 - **pgx/v5** - High-performance PostgreSQL driver
 - **zap** - Structured logging
 - **PostgreSQL 17** - Latest stable PostgreSQL version
+- **OpenTelemetry** - Distributed tracing
+- **Jaeger** - Trace visualization

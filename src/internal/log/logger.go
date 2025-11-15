@@ -29,6 +29,18 @@ func loggerFromContext(ctx context.Context) *zap.Logger {
 	return ctx.Value(ctxLoggerKey{}).(*zap.Logger)
 }
 
+func WithField(ctx context.Context, field zap.Field) context.Context {
+	logger := loggerFromContext(ctx)
+	newLogger := logger.With(field)
+	return loggerToContext(ctx, newLogger)
+}
+
+func WithFields(ctx context.Context, fields ...zap.Field) context.Context {
+	logger := loggerFromContext(ctx)
+	newLogger := logger.With(fields...)
+	return loggerToContext(ctx, newLogger)
+}
+
 func Info(ctx context.Context, msg string, fields ...zap.Field) {
 	logger := loggerFromContext(ctx)
 	logger.Info(msg, fields...)

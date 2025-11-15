@@ -187,30 +187,22 @@ Legacy documentation maintained for historical reference.
 
 EasyQueue follows a layered architecture:
 
-```
-┌─────────────────────────────────────┐
-│         Entry Layer                 │
-│         (cmd/main.go)               │
-└──────────────┬──────────────────────┘
-               │
-┌──────────────▼──────────────────────┐
-│      Configuration Layer            │
-│         (config/)                   │
-└──────────────┬──────────────────────┘
-               │
-┌──────────────▼──────────────────────┐
-│      Business Layer                 │
-│      (domain/, usecases/)           │
-│         [IN DEVELOPMENT]            │
-└──────────────┬──────────────────────┘
-               │
-┌──────────────▼──────────────────────┐
-│    Infrastructure Layer             │
-│         (infra/)                    │
-│  • Database (PostgreSQL)            │
-│  • Logging (Zap)                    │
-│  • Cache (Redis) [FUTURE]           │
-└─────────────────────────────────────┘
+```mermaid
+graph TD
+    A[Entry Layer<br/>cmd/main.go] --> B[Configuration Layer<br/>config/]
+    B --> C[Business Layer<br/>domain/, usecases/<br/>IN DEVELOPMENT]
+    C --> D[Infrastructure Layer<br/>infra/]
+    D --> E[Database - PostgreSQL]
+    D --> F[Logging - Zap]
+    D --> G[Cache - Redis<br/>FUTURE]
+    
+    style A fill:#e1f5ff
+    style B fill:#fff4e1
+    style C fill:#ffe1f5
+    style D fill:#e1ffe1
+    style E fill:#f0f0f0
+    style F fill:#f0f0f0
+    style G fill:#f0f0f0
 ```
 
 ## 📝 Code Conventions

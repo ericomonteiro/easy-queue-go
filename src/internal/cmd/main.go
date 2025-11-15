@@ -3,8 +3,12 @@ package main
 import (
 	"context"
 	"easy-queue-go/src/internal/config"
+	"easy-queue-go/src/internal/handlers"
+	"easy-queue-go/src/internal/infra/database"
 	"easy-queue-go/src/internal/log"
+	"easy-queue-go/src/internal/repositories"
 	"easy-queue-go/src/internal/routes"
+	"easy-queue-go/src/internal/services"
 	"easy-queue-go/src/internal/singletons"
 	"easy-queue-go/src/internal/tracing"
 
@@ -40,10 +44,22 @@ func main() {
 	}
 
 	// Initialize singletons (DB, configs, etc)
-	singletons.Initialize(ctx)
+	instances := singletons.Initialize(ctx)
+
+	// Get database pool
+	dbClient, ok := instances.DB.(*database.Client)
+	if !ok {
+		log.Fatal(ctx, "Failed to cast database client")
+	}
+	pool := dbClient.Pool()
+
+	// Initialize dependencies
+	userRepo := repositories.NewUserRepository(pool)
+	userService := services.NewUserService(userRepo)
+	userHandler := handlers.NewUserHandler(userService)
 
 	// Setup router
-	router := routes.SetupRouter(tracingConfig.ServiceName)
+	router := routes.SetupRouter(tracingConfig.ServiceName, userHandler)
 
 	// Start server
 	log.Info(ctx, "Starting server on port 8080")

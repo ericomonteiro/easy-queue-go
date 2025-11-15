@@ -1,120 +1,120 @@
-# Tracing com OpenTelemetry
+# Tracing with OpenTelemetry
 
-Este projeto utiliza OpenTelemetry para tracing distribuído, com Jaeger como backend de visualização.
+This project uses OpenTelemetry for distributed tracing, with Jaeger as the visualization backend.
 
-## 📑 Índice
+## 📋 Table of Contents
 
-- [Arquitetura](#arquitetura)
-- [Configuração](#configuração)
-  - [Variáveis de Ambiente](#variáveis-de-ambiente)
-- [Como Usar](#como-usar)
-  - [1. Iniciar os Serviços](#1-iniciar-os-serviços)
-  - [2. Acessar a UI do Jaeger](#2-acessar-a-ui-do-jaeger)
-  - [3. Executar a Aplicação](#3-executar-a-aplicação)
-  - [4. Gerar Traces](#4-gerar-traces)
-  - [5. Visualizar Traces no Jaeger](#5-visualizar-traces-no-jaeger)
-- [O que é Rastreado Automaticamente](#o-que-é-rastreado-automaticamente)
-- [Adicionando Spans Customizados](#adicionando-spans-customizados)
-  - [Exemplo Básico](#exemplo-básico)
-  - [Exemplo com Tratamento de Erros](#exemplo-com-tratamento-de-erros)
-  - [Exemplo com Spans Aninhados](#exemplo-com-spans-aninhados)
-  - [Exemplo em Handler HTTP](#exemplo-em-handler-http)
-  - [Tipos de Atributos Suportados](#tipos-de-atributos-suportados)
-- [Desabilitar Tracing](#desabilitar-tracing)
-- [Portas Utilizadas](#portas-utilizadas)
+- [Architecture](#architecture)
+- [Configuration](#configuration)
+  - [Environment Variables](#environment-variables)
+- [How to Use](#how-to-use)
+  - [1. Start Services](#1-start-services)
+  - [2. Access Jaeger UI](#2-access-jaeger-ui)
+  - [3. Run the Application](#3-run-the-application)
+  - [4. Generate Traces](#4-generate-traces)
+  - [5. View Traces in Jaeger](#5-view-traces-in-jaeger)
+- [What is Automatically Traced](#what-is-automatically-traced)
+- [Adding Custom Spans](#adding-custom-spans)
+  - [Basic Example](#basic-example)
+  - [Example with Error Handling](#example-with-error-handling)
+  - [Example with Nested Spans](#example-with-nested-spans)
+  - [Example in HTTP Handler](#example-in-http-handler)
+  - [Supported Attribute Types](#supported-attribute-types)
+- [Disable Tracing](#disable-tracing)
+- [Ports Used](#ports-used)
 - [Troubleshooting](#troubleshooting)
-  - [Traces não aparecem no Jaeger](#traces-não-aparecem-no-jaeger)
-  - [Erro ao conectar no OTLP endpoint](#erro-ao-conectar-no-otlp-endpoint)
-- [Próximos Passos](#próximos-passos)
+  - [Traces don't appear in Jaeger](#traces-dont-appear-in-jaeger)
+  - [Error connecting to OTLP endpoint](#error-connecting-to-otlp-endpoint)
+- [Next Steps](#next-steps)
 
 ---
 
-## Arquitetura
+## Architecture
 
-- **Instrumentação**: OpenTelemetry SDK
-- **Protocolo**: OTLP (OpenTelemetry Protocol) via HTTP
+- **Instrumentation**: OpenTelemetry SDK
+- **Protocol**: OTLP (OpenTelemetry Protocol) via HTTP
 - **Backend**: Jaeger All-in-One
-- **Middleware**: otelgin para instrumentação automática do Gin
+- **Middleware**: otelgin for automatic Gin instrumentation
 
-## Configuração
+## Configuration
 
-### Variáveis de Ambiente
+### Environment Variables
 
 ```bash
-# Habilitar/desabilitar tracing
+# Enable/disable tracing
 TRACING_ENABLED=true
 
-# Nome do serviço (aparece no Jaeger)
+# Service name (appears in Jaeger)
 SERVICE_NAME=easy-queue-go
 
-# Versão do serviço
+# Service version
 SERVICE_VERSION=1.0.0
 
-# Ambiente (development, staging, production)
+# Environment (development, staging, production)
 ENVIRONMENT=development
 
-# Endpoint do coletor OTLP (sem http://)
+# OTLP collector endpoint (without http://)
 OTEL_EXPORTER_OTLP_ENDPOINT=localhost:4318
 ```
 
-## Como Usar
+## How to Use
 
-### 1. Iniciar os Serviços
+### 1. Start Services
 
 ```bash
-# Iniciar Jaeger e PostgreSQL
+# Start Jaeger and PostgreSQL
 docker-compose up -d
 
-# Verificar se os serviços estão rodando
+# Check if services are running
 docker-compose ps
 ```
 
-### 2. Acessar a UI do Jaeger
+### 2. Access Jaeger UI
 
-Abra o navegador em: http://localhost:16686
+Open your browser at: http://localhost:16686
 
-### 3. Executar a Aplicação
+### 3. Run the Application
 
 ```bash
-# Certifique-se de ter um arquivo .env com as configurações
+# Make sure you have a .env file with configurations
 cp .env.example .env
 
-# Executar a aplicação
+# Run the application
 go run src/internal/cmd/main.go
 ```
 
-### 4. Gerar Traces
+### 4. Generate Traces
 
-Faça requisições para a aplicação:
+Make requests to the application:
 
 ```bash
 # Health check
 curl http://localhost:8080/health
 
-# Outras rotas...
+# Other routes...
 ```
 
-### 5. Visualizar Traces no Jaeger
+### 5. View Traces in Jaeger
 
-1. Acesse http://localhost:16686
-2. Selecione o serviço "easy-queue-go" no dropdown
-3. Clique em "Find Traces"
-4. Explore os traces gerados
+1. Access http://localhost:16686
+2. Select the "easy-queue-go" service in the dropdown
+3. Click "Find Traces"
+4. Explore the generated traces
 
-## O que é Rastreado Automaticamente
+## What is Automatically Traced
 
-O middleware `otelgin` rastreia automaticamente:
+The `otelgin` middleware automatically traces:
 
-- **HTTP Requests**: Método, path, status code
-- **Timing**: Duração total da requisição
-- **Errors**: Erros e stack traces
-- **Context Propagation**: Propagação de trace context entre serviços
+- **HTTP Requests**: Method, path, status code
+- **Timing**: Total request duration
+- **Errors**: Errors and stack traces
+- **Context Propagation**: Trace context propagation between services
 
-## Adicionando Spans Customizados
+## Adding Custom Spans
 
-### Exemplo Básico
+### Basic Example
 
-Para adicionar spans customizados no seu código:
+To add custom spans in your code:
 
 ```go
 import (
@@ -124,132 +124,132 @@ import (
     "go.opentelemetry.io/otel/codes"
 )
 
-func MinhaFuncao(ctx context.Context) error {
-    // Criar um novo span
-    tracer := tracing.Tracer("meu-componente")
-    ctx, span := tracer.Start(ctx, "MinhaFuncao")
+func MyFunction(ctx context.Context) error {
+    // Create a new span
+    tracer := tracing.Tracer("my-component")
+    ctx, span := tracer.Start(ctx, "MyFunction")
     defer span.End()
 
-    // Adicionar atributos ao span
+    // Add attributes to the span
     span.SetAttributes(
         attribute.String("user.id", "123"),
         attribute.Int("items.count", 42),
         attribute.Bool("is.success", true),
     )
 
-    // Seu código aqui...
+    // Your code here...
     
     return nil
 }
 ```
 
-### Exemplo com Tratamento de Erros
+### Example with Error Handling
 
 ```go
-func ProcessarPedido(ctx context.Context, pedidoID string) error {
-    tracer := tracing.Tracer("pedidos")
-    ctx, span := tracer.Start(ctx, "ProcessarPedido")
+func ProcessOrder(ctx context.Context, orderID string) error {
+    tracer := tracing.Tracer("orders")
+    ctx, span := tracer.Start(ctx, "ProcessOrder")
     defer span.End()
 
     span.SetAttributes(
-        attribute.String("pedido.id", pedidoID),
-        attribute.String("operation.type", "processar"),
+        attribute.String("order.id", orderID),
+        attribute.String("operation.type", "process"),
     )
 
-    // Simular processamento
-    err := realizarProcessamento(pedidoID)
+    // Simulate processing
+    err := performProcessing(orderID)
     if err != nil {
-        // Registrar erro no span
+        // Record error in span
         span.RecordError(err)
         span.SetStatus(codes.Error, err.Error())
         return err
     }
 
-    // Marcar span como bem-sucedido
-    span.SetStatus(codes.Ok, "Pedido processado com sucesso")
+    // Mark span as successful
+    span.SetStatus(codes.Ok, "Order processed successfully")
     return nil
 }
 ```
 
-### Exemplo com Spans Aninhados
+### Example with Nested Spans
 
 ```go
-func OperacaoCompleta(ctx context.Context) error {
-    tracer := tracing.Tracer("exemplo")
+func CompleteOperation(ctx context.Context) error {
+    tracer := tracing.Tracer("example")
 
-    // Span pai
-    ctx, parentSpan := tracer.Start(ctx, "OperacaoCompleta")
+    // Parent span
+    ctx, parentSpan := tracer.Start(ctx, "CompleteOperation")
     defer parentSpan.End()
 
-    // Primeira operação (span filho)
-    ctx, span1 := tracer.Start(ctx, "BuscarDados")
+    // First operation (child span)
+    ctx, span1 := tracer.Start(ctx, "FetchData")
     span1.SetAttributes(attribute.String("source", "database"))
-    // ... buscar dados ...
+    // ... fetch data ...
     span1.End()
 
-    // Segunda operação (span filho)
-    ctx, span2 := tracer.Start(ctx, "ProcessarDados")
+    // Second operation (child span)
+    ctx, span2 := tracer.Start(ctx, "ProcessData")
     span2.SetAttributes(attribute.Int("records.count", 100))
-    // ... processar dados ...
+    // ... process data ...
     span2.End()
 
-    // Terceira operação (span filho)
-    ctx, span3 := tracer.Start(ctx, "SalvarResultado")
+    // Third operation (child span)
+    ctx, span3 := tracer.Start(ctx, "SaveResult")
     span3.SetAttributes(attribute.String("destination", "cache"))
-    // ... salvar resultado ...
+    // ... save result ...
     span3.End()
 
-    parentSpan.SetStatus(codes.Ok, "Operação completa finalizada")
+    parentSpan.SetStatus(codes.Ok, "Complete operation finished")
     return nil
 }
 ```
 
-### Exemplo em Handler HTTP
+### Example in HTTP Handler
 
 ```go
-func MeuHandler(c *gin.Context) {
-    // O contexto já vem com o span do middleware otelgin
+func MyHandler(c *gin.Context) {
+    // Context already comes with span from otelgin middleware
     ctx := c.Request.Context()
     
     tracer := tracing.Tracer("handlers")
-    ctx, span := tracer.Start(ctx, "ProcessarRequisicao")
+    ctx, span := tracer.Start(ctx, "ProcessRequest")
     defer span.End()
 
-    // Adicionar informações da requisição
+    // Add request information
     span.SetAttributes(
         attribute.String("user.agent", c.GetHeader("User-Agent")),
         attribute.String("request.id", c.GetString("request_id")),
     )
 
-    // Processar a requisição
-    resultado, err := processarLogica(ctx)
+    // Process the request
+    result, err := processLogic(ctx)
     if err != nil {
         span.RecordError(err)
-        span.SetStatus(codes.Error, "Erro ao processar")
+        span.SetStatus(codes.Error, "Error processing")
         c.JSON(500, gin.H{"error": err.Error()})
         return
     }
 
-    span.SetStatus(codes.Ok, "Requisição processada")
-    c.JSON(200, resultado)
+    span.SetStatus(codes.Ok, "Request processed")
+    c.JSON(200, result)
 }
 ```
 
-### Tipos de Atributos Suportados
+### Supported Attribute Types
 
 ```go
 span.SetAttributes(
     // Strings
     attribute.String("key", "value"),
     
-    // Números inteiros
+    // Integers
     attribute.Int("count", 42),
     attribute.Int64("timestamp", time.Now().Unix()),
     
-    // Números decimais
+    // Decimals
     attribute.Float64("price", 19.99),
     
-    // Booleanos
+    // Booleans
     attribute.Bool("is_active", true),
     
     // Arrays
@@ -258,15 +258,15 @@ span.SetAttributes(
 )
 ```
 
-## Desabilitar Tracing
+## Disable Tracing
 
-Para desabilitar o tracing (útil em testes ou desenvolvimento):
+To disable tracing (useful in tests or development):
 
 ```bash
 TRACING_ENABLED=false
 ```
 
-## Portas Utilizadas
+## Ports Used
 
 - **16686**: Jaeger UI
 - **4318**: OTLP HTTP receiver
@@ -274,21 +274,21 @@ TRACING_ENABLED=false
 
 ## Troubleshooting
 
-### Traces não aparecem no Jaeger
+### Traces don't appear in Jaeger
 
-1. Verifique se o Jaeger está rodando: `docker-compose ps`
-2. Verifique os logs do Jaeger: `docker-compose logs jaeger`
-3. Confirme que `TRACING_ENABLED=true`
-4. Verifique se o endpoint está correto: `OTEL_EXPORTER_OTLP_ENDPOINT=localhost:4318`
+1. Check if Jaeger is running: `docker-compose ps`
+2. Check Jaeger logs: `docker-compose logs jaeger`
+3. Confirm that `TRACING_ENABLED=true`
+4. Verify the endpoint is correct: `OTEL_EXPORTER_OTLP_ENDPOINT=localhost:4318`
 
-### Erro ao conectar no OTLP endpoint
+### Error connecting to OTLP endpoint
 
-- Se a aplicação estiver em container, use o nome do serviço: `jaeger:4318`
-- Se estiver rodando localmente, use: `localhost:4318`
+- If the application is in a container, use the service name: `jaeger:4318`
+- If running locally, use: `localhost:4318`
 
-## Próximos Passos
+## Next Steps
 
-- Adicionar tracing para chamadas de banco de dados
-- Adicionar tracing para chamadas HTTP externas
-- Configurar sampling para produção
-- Integrar com outros backends (Tempo, Zipkin, etc.)
+- Add tracing for database calls
+- Add tracing for external HTTP calls
+- Configure sampling for production
+- Integrate with other backends (Tempo, Zipkin, etc.)

@@ -1,161 +1,161 @@
-# 🎯 Visão do Produto
+# 🎯 Product Vision
 
-## 🟢 EasyQueue — Sistema Inteligente de Filas Digitais
+## 🟢 EasyQueue — Intelligent Digital Queue Management System
 
-### 🚀 Redefinindo a experiência de espera através de filas virtuais inteligentes.
-
----
-
-## 🧭 Visão Geral do Produto
-
-**EasyQueue** é uma plataforma digital que elimina filas físicas, permitindo que clientes **esperem remotamente** e empresas **gerenciem atendimentos de forma eficiente**.
-
-Usando **geolocalização, dados em tempo real e notificações inteligentes**, o EasyQueue permite que empresas organizem seu fluxo de atendimento enquanto clientes desfrutam de uma experiência perfeita e econômica em tempo.
-
-O sistema opera com duas funções de usuário:
-
-- 🏢 **BO (Business Owner)** — gerencia filas, serviços e agendamentos.
-- 👤 **CU (Customer)** — entra na fila digital, recebe atualizações e faz check-in virtualmente.
+### 🚀 Redefining the waiting experience through smart virtual queues.
 
 ---
 
-## 💡 Problema
+## 🧭 Product Overview
 
-Filas físicas e tempos de espera imprevisíveis são um problema comum para muitas empresas baseadas em serviços, como salões, clínicas, oficinas e escritórios.
+**EasyQueue** is a digital platform that eliminates physical queues, allowing customers to **wait remotely** and businesses to **manage appointments efficiently**.
 
-**Proprietários de empresas** enfrentam:
-- Tempos de espera longos e imprevisíveis
-- Insatisfação do cliente e faltas
-- Baixa eficiência operacional
+Using **geolocation, real-time data, and smart notifications**, EasyQueue enables businesses to organize their service flow while customers enjoy a seamless and time-efficient experience.
 
-**Clientes** perdem tempo esperando no local sem visibilidade do processo.
+The system operates with two user roles:
 
----
-
-## ✅ Solução
-
-**EasyQueue** introduz uma **fila virtual inteligente**, onde os clientes podem esperar remotamente e chegar no momento certo para seu atendimento.
-
-### Principais Benefícios
-- Tempo de espera reduzido no local
-- Notificações inteligentes para timing de chegada
-- Check-in e controle de presença baseados em geolocalização
-- Configurações de tolerância e distância por serviço
-- Insights em tempo real sobre o progresso da fila
-
-Esta abordagem proporciona uma experiência de espera mais previsível, eficiente e amigável.
+- 🏢 **BO (Business Owner)** — manages queues, services, and appointments.
+- 👤 **CU (Customer)** — joins the digital queue, receives updates, and checks in virtually.
 
 ---
 
-## ⚙️ Funcionalidades Principais
+## 💡 Problem
 
-### 👤 Cliente (CU)
-- Entrar em uma fila virtual ou agendar um compromisso
-- Ver tempo de espera estimado
-- Receber notificações para tempo ideal de viagem
-- Realizar **check-in baseado em localização**
-- Cancelar ou reagendar reservas
-- Acompanhar reputação e histórico pessoal
+Physical queues and unpredictable wait times are a common problem for many service-based businesses, such as salons, clinics, workshops, and offices.
 
-### 🏢 Proprietário de Empresa (BO)
-- Registrar serviços e definir tempos médios de espera
-- Definir regras de **distância mínima** e **tolerância de check-in**
-- Gerenciar o dashboard da fila ao vivo
-- Receber alertas em tempo real para check-ins ou faltas
-- Monitorar métricas-chave: presença, atrasos e médias
-- Revisar reputação e confiabilidade do cliente
+**Business owners** face:
+- Long and unpredictable wait times
+- Customer dissatisfaction and no-shows
+- Low operational efficiency
+
+**Customers** waste time waiting on-site without visibility into the process.
 
 ---
 
-## 🧩 História de Usuário — Fluxo de Exemplo
+## ✅ Solution
 
-**Maria**, uma cliente, agenda um corte de cabelo no *Salão Beleza Pura*.  
-Ela entra na fila digital e vê sua posição: "Você é a 3ª da fila."
+**EasyQueue** introduces a **smart virtual queue**, where customers can wait remotely and arrive at the right time for their service.
 
-Quando o sistema estima que seu atendimento começará em 25 minutos, o EasyQueue envia uma notificação:
-> "Oi Maria, sua vez está chegando! Você está a cerca de 10 minutos de distância — é hora de começar a ir para o salão."
+### Key Benefits
+- Reduced on-site wait time
+- Smart notifications for arrival timing
+- Geolocation-based check-in and attendance control
+- Tolerance and distance settings per service
+- Real-time insights into queue progress
 
-Uma vez que Maria está a **2 km do local**, ela pode realizar um **check-in**, confirmando sua presença.  
-O salão recebe uma atualização em tempo real, mantendo a fila precisa e fluida.
-
-Maria chega no momento certo, recebe seu atendimento sem esperar e avalia sua experiência — enquanto a empresa mantém controle total do fluxo e pontualidade.
-
----
-
-## 🎯 Proposta de Valor
-
-O EasyQueue melhora a experiência do cliente e a eficiência operacional através de:
-
-- **Otimização de tempo** — não é necessário esperar fisicamente
-- **Transparência** — visibilidade em tempo real do status da fila
-- **Previsibilidade** — estimativas confiáveis de tempo de espera
-- **Responsabilidade** — tanto clientes quanto empresas são avaliados
-- **Escalabilidade** — adaptável a vários setores e tamanhos de negócios
+This approach provides a more predictable, efficient, and user-friendly waiting experience.
 
 ---
 
-## 🧠 Mercado-Alvo
+## ⚙️ Key Features
 
-O EasyQueue é ideal para qualquer empresa que opera com **serviços agendados ou walk-in**, incluindo:
+### 👤 Customer (CU)
+- Join a virtual queue or schedule an appointment
+- View estimated wait time
+- Receive notifications for optimal travel time
+- Perform **location-based check-in**
+- Cancel or reschedule reservations
+- Track personal reputation and history
 
-- Salões de beleza e barbearias
-- Clínicas médicas e laboratórios
-- Oficinas automotivas
-- Escritórios governamentais e centros de atendimento
-- Restaurantes e cafés com alta rotatividade de espera
-
----
-
-## 🏆 Diferencial Competitivo
-
-Ao contrário de aplicativos de agendamento tradicionais, o EasyQueue combina:
-- **Lógica de geolocalização inteligente**
-- **Rastreamento de fila em tempo real**
-- **Notificações automáticas para clientes**
-- **Validação de presença através de distância e tolerância de tempo**
-
-Isso cria um **sistema híbrido** — mais flexível que um agendador de compromissos rígido, mas mais eficiente que uma fila por ordem de chegada.
+### 🏢 Business Owner (BO)
+- Register services and define average wait times
+- Set **minimum distance** and **check-in tolerance** rules
+- Manage live queue dashboard
+- Receive real-time alerts for check-ins or no-shows
+- Monitor key metrics: attendance, delays, and averages
+- Review customer reputation and reliability
 
 ---
 
-## 📈 Objetivos do Produto
+## 🧩 User Story — Example Flow
 
-1. Validar a demanda do mercado por **filas virtuais com check-ins por geolocalização**.
-2. Reduzir o tempo de espera físico e otimizar o fluxo de clientes.
-3. Melhorar a eficiência empresarial através de insights baseados em dados.
-4. Criar uma plataforma digital escalável pronta para adoção multi-vertical.
+**Maria**, a customer, schedules a haircut at *Beleza Pura Salon*.  
+She joins the digital queue and sees her position: "You are 3rd in line."
+
+When the system estimates her service will start in 25 minutes, EasyQueue sends a notification:
+> "Hi Maria, your turn is coming! You are about 10 minutes away — it's time to start heading to the salon."
+
+Once Maria is **2 km from the location**, she can perform a **check-in**, confirming her presence.  
+The salon receives a real-time update, keeping the queue accurate and flowing.
+
+Maria arrives at the right time, receives her service without waiting, and rates her experience — while the business maintains full control of flow and punctuality.
+
+---
+
+## 🎯 Value Proposition
+
+EasyQueue improves customer experience and operational efficiency through:
+
+- **Time optimization** — no need to wait physically
+- **Transparency** — real-time visibility of queue status
+- **Predictability** — reliable wait time estimates
+- **Accountability** — both customers and businesses are rated
+- **Scalability** — adaptable to various sectors and business sizes
+
+---
+
+## 🧠 Target Market
+
+EasyQueue is ideal for any business that operates with **scheduled or walk-in services**, including:
+
+- Beauty salons and barbershops
+- Medical clinics and laboratories
+- Automotive workshops
+- Government offices and service centers
+- Restaurants and cafes with high wait turnover
+
+---
+
+## 🏆 Competitive Advantage
+
+Unlike traditional scheduling apps, EasyQueue combines:
+- **Smart geolocation logic**
+- **Real-time queue tracking**
+- **Automatic customer notifications**
+- **Presence validation through distance and time tolerance**
+
+This creates a **hybrid system** — more flexible than a rigid appointment scheduler, but more efficient than a first-come-first-served queue.
+
+---
+
+## 📈 Product Goals
+
+1. Validate market demand for **virtual queues with geolocation check-ins**.
+2. Reduce physical wait time and optimize customer flow.
+3. Improve business efficiency through data-driven insights.
+4. Create a scalable digital platform ready for multi-vertical adoption.
 
 ---
 
 ## 🔄 Roadmap
 
-### Fase 1: MVP (Em Desenvolvimento)
-- ✅ Estrutura base do projeto
-- ✅ Conexão com banco de dados PostgreSQL
-- ✅ Schema do banco de dados
-- 🔄 API REST básica
-- 🔄 Sistema de autenticação
+### Phase 1: MVP (In Development)
+- ✅ Project base structure
+- ✅ PostgreSQL database connection
+- ✅ Database schema
+- 🔄 Basic REST API
+- 🔄 Authentication system
 
-### Fase 2: Core Features
-- 📋 Gerenciamento de filas
-- 📍 Check-in por geolocalização
-- 🔔 Sistema de notificações
-- ⭐ Sistema de reputação
+### Phase 2: Core Features
+- 📋 Queue management
+- 📍 Geolocation check-in
+- 🔔 Notification system
+- ⭐ Reputation system
 
-### Fase 3: Melhorias
-- 📊 Dashboard analítico
-- 📱 Aplicativo mobile
-- 🤖 Estimativas com IA
-- 🌐 Multi-idioma
-
----
-
-### ✨ "EasyQueue — Chegue na hora certa. Atenda no ritmo certo. Sem espera."
+### Phase 3: Enhancements
+- 📊 Analytics dashboard
+- 📱 Mobile application
+- 🤖 AI-powered estimates
+- 🌐 Multi-language
 
 ---
 
-## 📚 Documentação Relacionada
+### ✨ "EasyQueue — Arrive at the right time. Serve at the right pace. No waiting."
 
-- [Schema do Banco de Dados](../database/schema.md)
-- [Guia de Início Rápido](../getting-started.md)
-- [Estrutura do Projeto](../project-structure.md)
+---
+
+## 📚 Related Documentation
+
+- [Database Schema](../database/schema.md)
+- [Quick Start Guide](../getting-started.md)
+- [Project Structure](../project-structure.md)

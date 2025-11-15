@@ -1,16 +1,16 @@
-# 🔄 Migrações de Banco de Dados
+# 🔄 Database Migrations
 
-Esta página documenta as migrações do banco de dados do EasyQueue.
+This page documents the EasyQueue database migrations.
 
-## 📋 Visão Geral
+## 📋 Overview
 
-As migrações de banco de dados são usadas para versionar e aplicar mudanças no schema do banco de dados de forma controlada e rastreável.
+Database migrations are used to version and apply changes to the database schema in a controlled and traceable manner.
 
-## 🛠️ Ferramenta de Migração
+## 🛠️ Migration Tool
 
-O EasyQueue utiliza [golang-migrate](https://github.com/golang-migrate/migrate) para gerenciar migrações.
+EasyQueue uses [golang-migrate](https://github.com/golang-migrate/migrate) to manage migrations.
 
-### Instalação
+### Installation
 
 ```bash
 # macOS
@@ -24,7 +24,7 @@ sudo mv migrate /usr/local/bin/
 scoop install migrate
 ```
 
-## 📁 Estrutura de Migrações
+## 📁 Migration Structure
 
 ```
 migrations/
@@ -35,54 +35,54 @@ migrations/
 └── ...
 ```
 
-## 🚀 Comandos Úteis
+## 🚀 Useful Commands
 
-### Criar uma Nova Migração
+### Create a New Migration
 
 ```bash
 migrate create -ext sql -dir migrations -seq create_users_table
 ```
 
-### Aplicar Migrações
+### Apply Migrations
 
 ```bash
-# Aplicar todas as migrações pendentes
+# Apply all pending migrations
 migrate -path migrations -database "postgresql://easyqueue:easyqueue123@localhost:5432/easyqueue?sslmode=disable" up
 
-# Aplicar N migrações
+# Apply N migrations
 migrate -path migrations -database "postgresql://..." up 2
 ```
 
-### Reverter Migrações
+### Revert Migrations
 
 ```bash
-# Reverter última migração
+# Revert last migration
 migrate -path migrations -database "postgresql://..." down 1
 
-# Reverter todas as migrações
+# Revert all migrations
 migrate -path migrations -database "postgresql://..." down
 ```
 
-### Verificar Versão Atual
+### Check Current Version
 
 ```bash
 migrate -path migrations -database "postgresql://..." version
 ```
 
-### Forçar Versão (em caso de erro)
+### Force Version (in case of error)
 
 ```bash
 migrate -path migrations -database "postgresql://..." force 1
 ```
 
-## 📝 Migrações Planejadas
+## 📝 Planned Migrations
 
-### Migration 001: Tabelas de Usuários
+### Migration 001: User Tables
 
-**Arquivo:** `000001_create_users_tables.up.sql`
+**File:** `000001_create_users_tables.up.sql`
 
 ```sql
--- Tabela de usuários base
+-- Base users table
 CREATE TABLE users (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     email VARCHAR(255) UNIQUE NOT NULL,
@@ -132,12 +132,12 @@ DROP TABLE IF EXISTS business_owners;
 DROP TABLE IF EXISTS users;
 ```
 
-### Migration 002: Tabelas de Negócios e Serviços
+### Migration 002: Business and Service Tables
 
-**Arquivo:** `000002_create_businesses_services.up.sql`
+**File:** `000002_create_businesses_services.up.sql`
 
 ```sql
--- Tabela de Businesses
+-- Businesses table
 CREATE TABLE businesses (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     owner_id UUID NOT NULL REFERENCES business_owners(id) ON DELETE CASCADE,
@@ -154,7 +154,7 @@ CREATE TABLE businesses (
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
--- Tabela de Services
+-- Services table
 CREATE TABLE services (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     business_id UUID NOT NULL REFERENCES businesses(id) ON DELETE CASCADE,
@@ -168,7 +168,7 @@ CREATE TABLE services (
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
--- Índices
+-- Indexes
 CREATE INDEX idx_businesses_owner_id ON businesses(owner_id);
 CREATE INDEX idx_businesses_location ON businesses(latitude, longitude);
 CREATE INDEX idx_businesses_is_active ON businesses(is_active);
@@ -176,12 +176,12 @@ CREATE INDEX idx_services_business_id ON services(business_id);
 CREATE INDEX idx_services_is_active ON services(is_active);
 ```
 
-### Migration 003: Tabelas de Filas
+### Migration 003: Queue Tables
 
-**Arquivo:** `000003_create_queues.up.sql`
+**File:** `000003_create_queues.up.sql`
 
 ```sql
--- Tabela de Queues
+-- Queues table
 CREATE TABLE queues (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     business_id UUID NOT NULL REFERENCES businesses(id) ON DELETE CASCADE,
@@ -193,7 +193,7 @@ CREATE TABLE queues (
     UNIQUE(business_id, queue_date)
 );
 
--- Tabela de Queue Entries
+-- Queue entries table
 CREATE TABLE queue_entries (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     queue_id UUID NOT NULL REFERENCES queues(id) ON DELETE CASCADE,
@@ -211,7 +211,7 @@ CREATE TABLE queue_entries (
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
--- Índices
+-- Indexes
 CREATE INDEX idx_queues_business_date ON queues(business_id, queue_date);
 CREATE INDEX idx_queue_entries_queue_id ON queue_entries(queue_id);
 CREATE INDEX idx_queue_entries_customer_id ON queue_entries(customer_id);
@@ -219,20 +219,20 @@ CREATE INDEX idx_queue_entries_status ON queue_entries(status);
 CREATE INDEX idx_queue_entries_position ON queue_entries(queue_id, position);
 ```
 
-## 🔒 Boas Práticas
+## 🔒 Best Practices
 
-1. **Sempre crie migrações reversíveis** - Cada `.up.sql` deve ter um `.down.sql` correspondente
-2. **Teste as migrações** - Teste tanto `up` quanto `down` em ambiente de desenvolvimento
-3. **Nunca modifique migrações aplicadas** - Crie uma nova migração para correções
-4. **Use transações** - Envolva mudanças complexas em transações
-5. **Documente mudanças** - Adicione comentários explicando o propósito da migração
+1. **Always create reversible migrations** - Each `.up.sql` must have a corresponding `.down.sql`
+2. **Test migrations** - Test both `up` and `down` in development environment
+3. **Never modify applied migrations** - Create a new migration for fixes
+4. **Use transactions** - Wrap complex changes in transactions
+5. **Document changes** - Add comments explaining the migration's purpose
 
-## 📚 Referências
+## 📚 References
 
 - [golang-migrate Documentation](https://github.com/golang-migrate/migrate)
 - [Database Migration Best Practices](https://www.prisma.io/dataguide/types/relational/migration-strategies)
-- [Schema do Banco de Dados](schema.md)
+- [Database Schema](schema.md)
 
 ---
 
-**Status:** 🚧 Em desenvolvimento - Migrações serão implementadas na próxima fase do projeto.
+**Status:** 🚧 In development - Migrations will be implemented in the next project phase.

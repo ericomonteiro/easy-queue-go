@@ -100,8 +100,8 @@ Generate new tokens using refresh token.
 
 ---
 
-### GET /users/:id (Protected)
-Get user by ID.
+### GET /users/me (Protected)
+Get the authenticated user's profile.
 
 **Headers:**
 ```
@@ -127,33 +127,32 @@ Authorization: Bearer {access_token}
 
 ---
 
-### GET /users/by-email (Protected)
-Get user by email.
+### GET /admin/users (Protected - Admin Only)
+List all users in the system.
 
 **Headers:**
 ```
 Authorization: Bearer {access_token}
 ```
 
-**Query Parameters:**
-- `email` (required): User email address
-
 **Response:** `200 OK`
 ```json
-{
-  "id": "uuid",
-  "email": "user@example.com",
-  "phone": "+5511999999999",
-  "roles": ["CU"],
-  "is_active": true,
-  "created_at": "2024-01-01T00:00:00Z",
-  "updated_at": "2024-01-01T00:00:00Z"
-}
+[
+  {
+    "id": "uuid",
+    "email": "user@example.com",
+    "phone": "+5511999999999",
+    "roles": ["CU"],
+    "is_active": true,
+    "created_at": "2024-01-01T00:00:00Z",
+    "updated_at": "2024-01-01T00:00:00Z"
+  }
+]
 ```
 
 **Errors:**
 - `401` - Missing or invalid token
-- `404` - User not found
+- `403` - Insufficient permissions (Admin role required)
 
 ---
 
@@ -222,9 +221,13 @@ curl -X POST http://localhost:8080/auth/login \
   -H "Content-Type: application/json" \
   -d '{"email":"test@example.com","password":"pass123"}'
 
-# Access protected endpoint
-curl http://localhost:8080/users/USER_ID \
+# Get my profile
+curl http://localhost:8080/users/me \
   -H "Authorization: Bearer ACCESS_TOKEN"
+
+# List all users (admin only)
+curl http://localhost:8080/admin/users \
+  -H "Authorization: Bearer ADMIN_ACCESS_TOKEN"
 
 # Refresh token
 curl -X POST http://localhost:8080/auth/refresh \

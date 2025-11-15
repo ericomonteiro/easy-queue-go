@@ -67,25 +67,39 @@ Contains business logic:
 ### 4. Handler (`src/internal/handlers/user_handler.go`)
 
 Manages HTTP requests:
-- `CreateUser`: POST /users
-- `GetUserByID`: GET /users/:id
-- `GetUserByEmail`: GET /users/by-email
+- `CreateUser`: POST /users (public)
+- `GetMyProfile`: GET /users/me (authenticated)
+- `ListAllUsers`: GET /admin/users (admin only)
 
 **Responsibilities:**
 - Input validation
 - JSON binding
 - HTTP error handling
 - Request logging
+- JWT claims extraction for authenticated endpoints
 
 ### 5. Routes (`src/internal/routes/router.go`)
 
 Registers HTTP routes:
 ```go
-usersGroup := router.Group("/users")
+// Public route
+router.POST("/users", userHandler.CreateUser)
+
+// Protected routes (require authentication)
+protected := router.Group("")
+protected.Use(middleware.AuthMiddleware(authService))
 {
-    usersGroup.POST("", userHandler.CreateUser)
-    usersGroup.GET("/:id", userHandler.GetUserByID)
-    usersGroup.GET("/by-email", userHandler.GetUserByEmail)
+    usersGroup := protected.Group("/users")
+    {
+        usersGroup.GET("/me", userHandler.GetMyProfile)
+    }
+    
+    // Admin-only routes
+    adminGroup := protected.Group("/admin")
+    adminGroup.Use(middleware.RequireRole(models.RoleAdmin))
+    {
+        adminGroup.GET("/users", userHandler.ListAllUsers)
+    }
 }
 ```
 
@@ -231,11 +245,13 @@ curl -X POST http://localhost:8080/users \
     "roles": ["BO", "CU"]
   }'
 
-# Find by ID
-curl http://localhost:8080/users/{user_id}
+# Get my profile (requires authentication)
+curl http://localhost:8080/users/me \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
 
-# Find by email
-curl "http://localhost:8080/users/by-email?email=test@example.com"
+# List all users (admin only)
+curl http://localhost:8080/admin/users \
+  -H "Authorization: Bearer YOUR_ADMIN_ACCESS_TOKEN"
 ```
 
 ## Next Steps

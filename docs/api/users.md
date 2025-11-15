@@ -50,43 +50,13 @@ Creates a new user in the system.
 
 ---
 
-### 2. Get User by ID
+### 2. Get My Profile
 
-Returns data for a specific user.
+Returns the profile data of the currently authenticated user.
 
-**Endpoint:** `GET /users/:id`
+**Endpoint:** `GET /users/me`
 
-**Parameters:**
-- `id` (UUID): User ID
-
-**Response (200 OK):**
-```json
-{
-  "id": "550e8400-e29b-41d4-a716-446655440000",
-  "email": "user@example.com",
-  "phone": "+5511999999999",
-  "roles": ["CU"],
-  "is_active": true,
-  "created_at": "2024-11-15T20:10:00Z",
-  "updated_at": "2024-11-15T20:10:00Z"
-}
-```
-
-**Errors:**
-- `400 Bad Request`: Invalid ID
-- `404 Not Found`: User not found
-- `500 Internal Server Error`: Server error
-
----
-
-### 3. Get User by Email
-
-Returns user data by email.
-
-**Endpoint:** `GET /users/by-email?email=user@example.com`
-
-**Query Parameters:**
-- `email` (string): User email
+**Authentication:** Required (Bearer Token)
 
 **Response (200 OK):**
 ```json
@@ -102,13 +72,13 @@ Returns user data by email.
 ```
 
 **Errors:**
-- `400 Bad Request`: Email not provided
+- `401 Unauthorized`: Missing or invalid token
 - `404 Not Found`: User not found
 - `500 Internal Server Error`: Server error
 
 ---
 
-### 4. List All Users (Admin Only)
+### 3. List All Users (Admin Only)
 
 Returns a list of all users in the system. Requires authentication and Admin role.
 
@@ -190,16 +160,11 @@ curl -X POST http://localhost:8080/users \
   }'
 ```
 
-### Get User by ID
+### Get My Profile
 
 ```bash
-curl http://localhost:8080/users/550e8400-e29b-41d4-a716-446655440000
-```
-
-### Get User by Email
-
-```bash
-curl "http://localhost:8080/users/by-email?email=cliente@example.com"
+curl http://localhost:8080/users/me \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
 ```
 
 ### List All Users (Admin Only)
@@ -225,9 +190,9 @@ All error responses follow this format:
 **Error Codes:**
 - `invalid_request`: Invalid request data (includes invalid roles)
 - `user_already_exists`: Email already registered
-- `invalid_id`: Invalid UUID
-- `missing_email`: Email not provided
 - `user_not_found`: User not found
+- `unauthorized`: Missing or invalid authentication
+- `forbidden`: Insufficient permissions
 - `internal_error`: Internal server error
 
 **Note:** Roles validation is handled automatically by the binding tag. Valid roles are `BO`, `CU`, and `AD`, and at least one role must be provided.

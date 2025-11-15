@@ -1,6 +1,7 @@
 <!-- docs/_sidebar.md -->
 
 * [🏠 Home](/)
+* [🎯 Product Vision](product/overview.md)
 * [📖 Overview](README.md)
 * [🚀 Getting Started](getting-started.md)
 * [📁 Project Structure](project-structure.md)
@@ -20,6 +21,3 @@
   * [👥 Users API](api/users.md)
   * [🔑 Authentication API](api/authentication.md)
   * [📖 Swagger Guide](api/swagger.md)
-
-* **Product**
-  * [🎯 Vision](product/overview.md)

@@ -1,5 +1,50 @@
 basePath: /api/v1
 definitions:
+  easy-queue-go_src_internal_models.BusinessResponse:
+    properties:
+      address:
+        type: string
+      created_at:
+        type: string
+      description:
+        type: string
+      email:
+        type: string
+      id:
+        type: string
+      is_active:
+        type: boolean
+      name:
+        type: string
+      owner_id:
+        type: string
+      phone:
+        type: string
+      updated_at:
+        type: string
+    type: object
+  easy-queue-go_src_internal_models.CreateBusinessRequest:
+    properties:
+      address:
+        maxLength: 500
+        type: string
+      description:
+        maxLength: 1000
+        type: string
+      email:
+        type: string
+      name:
+        maxLength: 255
+        minLength: 3
+        type: string
+      phone:
+        maxLength: 50
+        minLength: 10
+        type: string
+    required:
+    - name
+    - phone
+    type: object
   easy-queue-go_src_internal_models.CreateUserRequest:
     properties:
       email:
@@ -62,6 +107,27 @@ definitions:
       token_type:
         type: string
     type: object
+  easy-queue-go_src_internal_models.UpdateBusinessRequest:
+    properties:
+      address:
+        maxLength: 500
+        type: string
+      description:
+        maxLength: 1000
+        type: string
+      email:
+        type: string
+      is_active:
+        type: boolean
+      name:
+        maxLength: 255
+        minLength: 3
+        type: string
+      phone:
+        maxLength: 50
+        minLength: 10
+        type: string
+    type: object
   easy-queue-go_src_internal_models.UserResponse:
     properties:
       created_at:
@@ -120,6 +186,37 @@ info:
   title: Easy Queue API
   version: "1.0"
 paths:
+  /admin/businesses:
+    get:
+      consumes:
+      - application/json
+      description: Returns a list of all businesses in the system
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/easy-queue-go_src_internal_models.BusinessResponse'
+            type: array
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/src_internal_handlers.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/src_internal_handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/src_internal_handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Lists all businesses (Admin only)
+      tags:
+      - businesses
   /admin/users:
     get:
       consumes:
@@ -231,6 +328,200 @@ paths:
       summary: Refresh access token
       tags:
       - auth
+  /businesses:
+    post:
+      consumes:
+      - application/json
+      description: Creates a new business for the authenticated business owner
+      parameters:
+      - description: Business data
+        in: body
+        name: business
+        required: true
+        schema:
+          $ref: '#/definitions/easy-queue-go_src_internal_models.CreateBusinessRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/easy-queue-go_src_internal_models.BusinessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/src_internal_handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/src_internal_handlers.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/src_internal_handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/src_internal_handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Creates a new business
+      tags:
+      - businesses
+  /businesses/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Deletes an existing business (owner only)
+      parameters:
+      - description: Business ID (UUID)
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/src_internal_handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/src_internal_handlers.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/src_internal_handlers.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/src_internal_handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/src_internal_handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Deletes a business
+      tags:
+      - businesses
+    get:
+      consumes:
+      - application/json
+      description: Returns the data of a specific business by ID
+      parameters:
+      - description: Business ID (UUID)
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/easy-queue-go_src_internal_models.BusinessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/src_internal_handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/src_internal_handlers.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/src_internal_handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/src_internal_handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Retrieves a business by ID
+      tags:
+      - businesses
+    put:
+      consumes:
+      - application/json
+      description: Updates an existing business (owner only)
+      parameters:
+      - description: Business ID (UUID)
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Business data to update
+        in: body
+        name: business
+        required: true
+        schema:
+          $ref: '#/definitions/easy-queue-go_src_internal_models.UpdateBusinessRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/easy-queue-go_src_internal_models.BusinessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/src_internal_handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/src_internal_handlers.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/src_internal_handlers.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/src_internal_handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/src_internal_handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Updates a business
+      tags:
+      - businesses
+  /businesses/my:
+    get:
+      consumes:
+      - application/json
+      description: Returns a list of all businesses owned by the current user
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/easy-queue-go_src_internal_models.BusinessResponse'
+            type: array
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/src_internal_handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/src_internal_handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Retrieves all businesses owned by the authenticated user
+      tags:
+      - businesses
   /health:
     get:
       consumes:
@@ -281,17 +572,11 @@ paths:
       summary: Creates a new user
       tags:
       - users
-  /users/{id}:
+  /users/me:
     get:
       consumes:
       - application/json
-      description: Returns the data of a specific user by ID
-      parameters:
-      - description: User ID (UUID)
-        in: path
-        name: id
-        required: true
-        type: string
+      description: Returns the profile data of the currently authenticated user
       produces:
       - application/json
       responses:
@@ -299,8 +584,8 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/easy-queue-go_src_internal_models.UserResponse'
-        "400":
-          description: Bad Request
+        "401":
+          description: Unauthorized
           schema:
             $ref: '#/definitions/src_internal_handlers.ErrorResponse'
         "404":
@@ -311,40 +596,9 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/src_internal_handlers.ErrorResponse'
-      summary: Retrieves a user by ID
-      tags:
-      - users
-  /users/by-email:
-    get:
-      consumes:
-      - application/json
-      description: Returns the data of a specific user by email
-      parameters:
-      - description: User email
-        in: query
-        name: email
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/easy-queue-go_src_internal_models.UserResponse'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/src_internal_handlers.ErrorResponse'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/src_internal_handlers.ErrorResponse'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/src_internal_handlers.ErrorResponse'
-      summary: Retrieves a user by email
+      security:
+      - BearerAuth: []
+      summary: Retrieves the authenticated user's profile
       tags:
       - users
 securityDefinitions:

@@ -83,6 +83,11 @@ func main() {
 	userService := services.NewUserService(userRepo)
 	userHandler := handlers.NewUserHandler(userService)
 
+	// Initialize business dependencies
+	businessRepo := repositories.NewBusinessRepository(pool)
+	businessService := services.NewBusinessService(businessRepo, userRepo)
+	businessHandler := handlers.NewBusinessHandler(businessService)
+
 	// Initialize auth service
 	authService := services.NewAuthService(userRepo, services.AuthServiceConfig{
 		JWTSecret:       configs.JWT.Secret,
@@ -94,7 +99,7 @@ func main() {
 	authHandler := handlers.NewAuthHandler(authService)
 
 	// Setup router
-	router := routes.SetupRouter(tracingConfig.ServiceName, userHandler, authHandler, authService)
+	router := routes.SetupRouter(tracingConfig.ServiceName, userHandler, authHandler, businessHandler, authService)
 
 	// Start server
 	log.Info(ctx, "Starting server on port 8080")

@@ -7,7 +7,6 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
 	"go.uber.org/zap"
 )
 
@@ -57,7 +56,7 @@ func (h *UserHandler) CreateUser(c *gin.Context) {
 	user, err := h.userService.CreateUser(ctx, &req)
 	if err != nil {
 		log.Error(ctx, "Failed to create user", zap.Error(err))
-		
+
 		// Check if it's a duplication error
 		if err.Error() == "user with email "+req.Email+" already exists" {
 			c.JSON(http.StatusConflict, ErrorResponse{
@@ -82,36 +81,31 @@ func (h *UserHandler) CreateUser(c *gin.Context) {
 	c.JSON(http.StatusCreated, user)
 }
 
-// GetUserByID godoc
-// @Summary Retrieves a user by ID
-// @Description Returns the data of a specific user by ID
+// GetMyProfile godoc
+// @Summary Retrieves the authenticated user's profile
+// @Description Returns the profile data of the currently authenticated user
 // @Tags users
 // @Accept json
 // @Produce json
-// @Param id path string true "User ID (UUID)"
+// @Security BearerAuth
 // @Success 200 {object} models.UserResponse
-// @Failure 400 {object} ErrorResponse
+// @Failure 401 {object} ErrorResponse
 // @Failure 404 {object} ErrorResponse
 // @Failure 500 {object} ErrorResponse
-// @Router /users/{id} [get]
-func (h *UserHandler) GetUserByID(c *gin.Context) {
+// @Router /users/me [get]
+func (h *UserHandler) GetMyProfile(c *gin.Context) {
 	ctx := c.Request.Context()
 
-	idParam := c.Param("id")
-	id, err := uuid.Parse(idParam)
-	if err != nil {
-		log.Warn(ctx, "Invalid user ID format", zap.String("id", idParam))
-		c.JSON(http.StatusBadRequest, ErrorResponse{
-			Error:   "invalid_id",
-			Message: "Invalid UUID format",
-		})
-		return
+	// Extract JWT claims from context using the helper
+	jwtClaims, ok := GetClaimsFromContext(c)
+	if !ok {
+		return // Error already handled and sent to client
 	}
 
-	user, err := h.userService.GetUserByID(ctx, id)
+	user, err := h.userService.GetUserByID(ctx, jwtClaims.UserID)
 	if err != nil {
-		log.Error(ctx, "Failed to get user", zap.Error(err), zap.String("id", id.String()))
-		
+		log.Error(ctx, "Failed to get user profile", zap.Error(err), zap.String("user_id", jwtClaims.UserID.String()))
+
 		if err.Error() == "user not found" {
 			c.JSON(http.StatusNotFound, ErrorResponse{
 				Error:   "user_not_found",
@@ -122,54 +116,7 @@ func (h *UserHandler) GetUserByID(c *gin.Context) {
 
 		c.JSON(http.StatusInternalServerError, ErrorResponse{
 			Error:   "internal_error",
-			Message: "Failed to get user",
-		})
-		return
-	}
-
-	c.JSON(http.StatusOK, user)
-}
-
-// GetUserByEmail godoc
-// @Summary Retrieves a user by email
-// @Description Returns the data of a specific user by email
-// @Tags users
-// @Accept json
-// @Produce json
-// @Param email query string true "User email"
-// @Success 200 {object} models.UserResponse
-// @Failure 400 {object} ErrorResponse
-// @Failure 404 {object} ErrorResponse
-// @Failure 500 {object} ErrorResponse
-// @Router /users/by-email [get]
-func (h *UserHandler) GetUserByEmail(c *gin.Context) {
-	ctx := c.Request.Context()
-
-	email := c.Query("email")
-	if email == "" {
-		log.Warn(ctx, "Email parameter is required")
-		c.JSON(http.StatusBadRequest, ErrorResponse{
-			Error:   "missing_email",
-			Message: "Email query parameter is required",
-		})
-		return
-	}
-
-	user, err := h.userService.GetUserByEmail(ctx, email)
-	if err != nil {
-		log.Error(ctx, "Failed to get user by email", zap.Error(err), zap.String("email", email))
-		
-		if err.Error() == "user not found" {
-			c.JSON(http.StatusNotFound, ErrorResponse{
-				Error:   "user_not_found",
-				Message: "User not found",
-			})
-			return
-		}
-
-		c.JSON(http.StatusInternalServerError, ErrorResponse{
-			Error:   "internal_error",
-			Message: "Failed to get user",
+			Message: "Failed to get user profile",
 		})
 		return
 	}

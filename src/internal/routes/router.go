@@ -18,6 +18,7 @@ func SetupRouter(
 	serviceName string,
 	userHandler *handlers.UserHandler,
 	authHandler *handlers.AuthHandler,
+	businessHandler *handlers.BusinessHandler,
 	authService services.AuthService,
 ) *gin.Engine {
 	router := gin.Default()
@@ -51,8 +52,18 @@ func SetupRouter(
 		// User routes (authenticated users can access their own data)
 		usersGroup := protected.Group("/users")
 		{
-			usersGroup.GET("/:id", userHandler.GetUserByID)
-			usersGroup.GET("/by-email", userHandler.GetUserByEmail)
+			usersGroup.GET("/me", userHandler.GetMyProfile)
+		}
+
+		// Business routes (authenticated users)
+		businessGroup := protected.Group("/businesses")
+		businessGroup.Use(middleware.RequireRole(models.RoleBusinessOwner))
+		{
+			businessGroup.POST("", businessHandler.CreateBusiness)
+			businessGroup.GET("/my", businessHandler.GetMyBusinesses)
+			businessGroup.GET("/:id", businessHandler.GetBusinessByID)
+			businessGroup.PUT("/:id", businessHandler.UpdateBusiness)
+			businessGroup.DELETE("/:id", businessHandler.DeleteBusiness)
 		}
 
 		// Admin-only routes
@@ -60,6 +71,7 @@ func SetupRouter(
 		adminGroup.Use(middleware.RequireRole(models.RoleAdmin))
 		{
 			adminGroup.GET("/users", userHandler.ListAllUsers)
+			adminGroup.GET("/businesses", businessHandler.ListAllBusinesses)
 		}
 	}
 

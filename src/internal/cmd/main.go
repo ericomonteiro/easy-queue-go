@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"easy-queue-go/src/internal/config"
 	"easy-queue-go/src/internal/log"
 	"easy-queue-go/src/internal/routes"
 	"easy-queue-go/src/internal/singletons"
@@ -11,6 +12,11 @@ import (
 )
 
 func main() {
+	// Load environment variables from .env file
+	if err := config.LoadEnvFile(); err != nil {
+		panic(err)
+	}
+
 	// Initialize zap logger
 	ctx := log.Initialize(context.Background())
 

@@ -64,6 +64,12 @@ go mod download
 ### 4. Run the Application
 
 ```bash
+make run
+```
+
+Or directly with Go:
+
+```bash
 go run src/internal/cmd/main.go
 ```
 
@@ -73,38 +79,24 @@ The server will start on http://localhost:8080
 
 ```
 easy-queue-go/
-├── src/
-│   └── internal/
-│       ├── cmd/              # Application entry point
-│       │   └── main.go
-│       ├── config/           # Configuration management
-│       │   ├── db_config.go
-│       │   ├── env_loader.go
-│       │   └── initializer.go
-│       ├── handlers/         # HTTP handlers
-│       │   └── health_handler.go
-│       ├── infra/            # Infrastructure layer
-│       │   ├── database/
-│       │   │   └── postgres.go
-│       │   └── interfaces.go
-│       ├── log/              # Structured logging
-│       │   └── logger.go
-│       ├── routes/           # Router configuration
-│       │   └── router.go
-│       ├── singletons/       # Singleton instances
-│       │   └── initializer.go
-│       └── tracing/          # OpenTelemetry tracing
-│           ├── config.go
-│           └── tracer.go
-├── configs/                  # Configuration files
-│   └── application.properties
-├── docs/                     # Documentation
-│   ├── database/
-│   ├── product/
-│   └── project-structure.md
-├── docker-compose.yml        # Docker services
-├── go.mod                    # Go dependencies
-└── README.md
+├── src/internal/
+│   ├── cmd/              # Application entry point
+│   ├── config/           # Configuration management
+│   ├── handlers/         # HTTP request handlers
+│   ├── infra/            # Infrastructure layer (database, interfaces)
+│   ├── log/              # Structured logging
+│   ├── middleware/       # HTTP middleware (auth, logging, etc.)
+│   ├── models/           # Domain models and DTOs
+│   ├── repositories/     # Data access layer
+│   ├── routes/           # Router configuration
+│   ├── services/         # Business logic layer
+│   └── tracing/          # OpenTelemetry tracing
+├── configs/              # Configuration files
+├── docs/                 # Documentation (Docsify + Swagger)
+├── migrations/           # Database migrations
+├── docker-compose.yml    # Docker services
+├── Makefile              # Build and development tasks
+└── go.mod                # Go dependencies
 ```
 
 📖 See [docs/project-structure.md](docs/project-structure.md) for detailed architecture documentation.
@@ -169,7 +161,7 @@ Generate/update documentation:
 make swagger-generate
 ```
 
-📖 See [docs/api/swagger.md](docs/api/swagger.md) for detailed Swagger documentation.
+📖 See [SWAGGER_QUICKSTART.md](SWAGGER_QUICKSTART.md) for quick start guide and [docs/api/swagger.md](docs/api/swagger.md) for detailed documentation.
 
 ## API Endpoints
 
@@ -192,7 +184,28 @@ make swagger-generate
 - **PostgreSQL 17** - Database
 - **godotenv** - Environment variable management
 
+### Makefile Commands
+
+The project includes a Makefile with common tasks:
+
+```bash
+make help              # Show all available commands
+make run               # Run the application
+make build             # Build the application binary
+make test              # Run tests
+make tidy              # Tidy go modules
+make swagger-install   # Install Swag CLI tool
+make swagger-generate  # Generate Swagger documentation
+make swagger-clean     # Clean generated Swagger files
+```
+
 ### Running Tests
+
+```bash
+make test
+```
+
+Or directly with Go:
 
 ```bash
 go test ./...
@@ -201,7 +214,13 @@ go test ./...
 ### Building for Production
 
 ```bash
-go build -o bin/easy-queue src/internal/cmd/main.go
+make build
+```
+
+Or directly with Go:
+
+```bash
+go build -o bin/easy-queue-go src/internal/cmd/main.go
 ```
 
 ## Stopping Services
@@ -216,8 +235,12 @@ docker-compose down -v
 
 ## Documentation
 
+### Quick Start Guides
+- 📖 [Swagger Quick Start](SWAGGER_QUICKSTART.md) - Quick guide to API documentation
+- 📖 [Viewing Documentation](docs/VIEWING_DOCS.md) - How to view the documentation site locally
+
+### Detailed Documentation
 - 📖 [Project Structure](docs/project-structure.md) - Detailed architecture and code organization
-- 📖 [Tracing Quickstart](TRACING_QUICKSTART.md) - OpenTelemetry and Jaeger setup
 - 📖 [Swagger Documentation](docs/api/swagger.md) - API documentation with Swagger/OpenAPI
 - 📖 [Database Schema](docs/database/schema.md) - Database design and migrations
 - 📖 [Product Overview](docs/product/overview.md) - Product vision and features

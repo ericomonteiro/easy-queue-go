@@ -12,9 +12,11 @@
 
 * **Features**
   * [👤 User Management](features/user-management.md)
+  * [🔐 Authentication & Authorization](features/authentication.md)
 
 * **API**
   * [👥 Users API](api/users.md)
+  * [🔑 Authentication API](api/authentication.md)
 
 * **Product**
   * [🎯 Vision](product/overview.md)

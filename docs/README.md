@@ -10,6 +10,7 @@
 
 ## ✨ Key Features
 
+- 🔐 **JWT Authentication** - Secure stateless authentication with access and refresh tokens
 - 🌍 **Smart Geolocation** - Proximity-based check-in
 - ⏱️ **Real-Time Estimates** - Accurate and updated wait times
 - 🔔 **Smart Notifications** - Timely arrival alerts
@@ -40,19 +41,26 @@ This will start a PostgreSQL 17 container with the following default credentials
 - **User**: easyqueue
 - **Password**: easyqueue123
 
-### 2️⃣ Configure Environment Variables (Optional)
+### 2️⃣ Configure Environment Variables
 
 Copy the example environment file:
 
 ```bash
-cp .env.example .env
+cp .env.example .env.local
 ```
 
-Modify the values in `.env` if needed. The application will use these defaults if not set:
+Configure the required variables in `.env.local`:
+
+**Database:**
 - `DB_HOST=localhost`
 - `DB_USER=easyqueue`
 - `DB_PASSWORD=easyqueue123`
 - `DB_NAME=easyqueue`
+
+**JWT Authentication (Required):**
+- `JWT_SECRET=your-super-secret-jwt-key-change-this-in-production`
+- `JWT_ACCESS_TOKEN_TTL=15m`
+- `JWT_REFRESH_TOKEN_TTL=168h`
 
 ### 3️⃣ Install Dependencies
 
@@ -110,8 +118,12 @@ docker-compose down -v
 | Technology | Description |
 |------------|-------------|
 | **Go 1.25+** | Main programming language |
+| **Gin** | High-performance HTTP web framework |
+| **JWT** | Stateless authentication with golang-jwt/jwt/v5 |
 | **pgx/v5** | High-performance PostgreSQL driver |
+| **bcrypt** | Secure password hashing |
 | **zap** | Structured and efficient logging |
+| **OpenTelemetry** | Distributed tracing and observability |
 | **PostgreSQL 17** | Relational database |
 | **Docker** | Containerization and deployment |
 
@@ -119,7 +131,10 @@ docker-compose down -v
 
 ## 🎯 Next Steps
 
-- 📖 Explore the [database documentation](database/schema.md)
+- 🔐 Learn about [Authentication & Authorization](features/authentication.md)
+- 📖 Explore the [API documentation](api/authentication.md)
+- 🗄️ Review the [database schema](database/schema.md)
+- 👤 Understand [User Management](features/user-management.md)
 - 🔍 See the [product vision](product/overview.md)
 - 🚀 Set up your development environment
 - 🤝 Contribute to the project

@@ -11,13 +11,15 @@ import (
 )
 
 type Instances struct {
-	DB infra.IDataBase
+	DB      infra.IDataBase
+	Configs *config.Configs
 }
 
 func Initialize(ctx context.Context) *Instances {
 	instances := new(Instances)
 
 	configs := loadAllConfigs(ctx)
+	instances.Configs = configs
 
 	loadAllInfra(ctx, instances, configs)
 

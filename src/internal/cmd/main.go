@@ -53,13 +53,24 @@ func main() {
 	}
 	pool := dbClient.Pool()
 
+	// Get configs
+	configs := instances.Configs
+
 	// Initialize dependencies
 	userRepo := repositories.NewUserRepository(pool)
 	userService := services.NewUserService(userRepo)
 	userHandler := handlers.NewUserHandler(userService)
 
+	// Initialize auth service and handler
+	authService := services.NewAuthService(userRepo, services.AuthServiceConfig{
+		JWTSecret:       configs.JWT.Secret,
+		AccessTokenTTL:  configs.JWT.AccessTokenTTL,
+		RefreshTokenTTL: configs.JWT.RefreshTokenTTL,
+	})
+	authHandler := handlers.NewAuthHandler(authService)
+
 	// Setup router
-	router := routes.SetupRouter(tracingConfig.ServiceName, userHandler)
+	router := routes.SetupRouter(tracingConfig.ServiceName, userHandler, authHandler, authService)
 
 	// Start server
 	log.Info(ctx, "Starting server on port 8080")

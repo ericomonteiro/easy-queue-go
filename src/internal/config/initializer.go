@@ -1,17 +1,27 @@
 package config
 
-import "os"
+import (
+	"log"
+	"os"
+)
 
 type Configs struct {
-	DB *DBConfig
+	DB  *DBConfig
+	JWT *JWTConfig
 }
 
 // InitializeConfigs initializes the configs
 func InitializeConfigs() *Configs {
 	dbConfigs := LoadDBConfigs()
+	
+	jwtConfig, err := LoadJWTConfig()
+	if err != nil {
+		log.Fatalf("Failed to load JWT config: %v", err)
+	}
 
 	return &Configs{
-		DB: dbConfigs,
+		DB:  dbConfigs,
+		JWT: jwtConfig,
 	}
 }
 

@@ -1,33 +1,33 @@
 # 🟢 EasyQueue
 
-> Sistema inteligente de filas digitais desenvolvido em Go
+> Intelligent digital queue management system built with Go
 
-**EasyQueue** é uma plataforma digital que elimina filas físicas, permitindo que clientes **esperem remotamente** e empresas **gerenciem atendimentos de forma eficiente**.
+**EasyQueue** is a digital platform that eliminates physical queues, allowing customers to **wait remotely** and businesses to **manage appointments efficiently**.
 
 [![Go Version](https://img.shields.io/badge/Go-1.25+-00ADD8?style=for-the-badge&logo=go)](https://golang.org)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-17-336791?style=for-the-badge&logo=postgresql)](https://www.postgresql.org)
 [![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?style=for-the-badge&logo=docker)](https://www.docker.com)
 
-## ✨ Principais Funcionalidades
+## ✨ Key Features
 
-- 🌍 **Geolocalização Inteligente** - Check-in baseado em proximidade
-- ⏱️ **Estimativas em Tempo Real** - Tempo de espera preciso e atualizado
-- 🔔 **Notificações Smart** - Alertas no momento certo para chegada
-- 📊 **Dashboard de Gestão** - Controle total da fila para empresas
-- ⭐ **Sistema de Reputação** - Avaliação bidirecional (clientes e empresas)
-- 📱 **Multi-plataforma** - API REST pronta para integração
+- 🌍 **Smart Geolocation** - Proximity-based check-in
+- ⏱️ **Real-Time Estimates** - Accurate and updated wait times
+- 🔔 **Smart Notifications** - Timely arrival alerts
+- 📊 **Management Dashboard** - Complete queue control for businesses
+- ⭐ **Reputation System** - Bidirectional ratings (customers and businesses)
+- 📱 **Multi-platform** - REST API ready for integration
 
 ---
 
-## 📋 Pré-requisitos
+## 📋 Prerequisites
 
-- **Go** 1.25 ou superior
-- **Docker** e Docker Compose
+- **Go** 1.25 or higher
+- **Docker** and Docker Compose
 - **PostgreSQL** 17 (via Docker)
 
-## 🚀 Começando
+## 🚀 Getting Started
 
-### 1️⃣ Iniciar PostgreSQL
+### 1️⃣ Start PostgreSQL
 
 ```bash
 docker-compose up -d
@@ -40,7 +40,7 @@ This will start a PostgreSQL 17 container with the following default credentials
 - **User**: easyqueue
 - **Password**: easyqueue123
 
-### 2️⃣ Configurar Variáveis de Ambiente (Opcional)
+### 2️⃣ Configure Environment Variables (Optional)
 
 Copy the example environment file:
 
@@ -54,13 +54,13 @@ Modify the values in `.env` if needed. The application will use these defaults i
 - `DB_PASSWORD=easyqueue123`
 - `DB_NAME=easyqueue`
 
-### 3️⃣ Instalar Dependências
+### 3️⃣ Install Dependencies
 
 ```bash
 go mod download
 ```
 
-### 4️⃣ Executar a Aplicação
+### 4️⃣ Run the Application
 
 ```bash
 go run cmd/main.go
@@ -68,7 +68,7 @@ go run cmd/main.go
 
 ---
 
-## 📁 Estrutura do Projeto
+## 📁 Project Structure
 
 ```
 .
@@ -83,17 +83,17 @@ go run cmd/main.go
 └── README.md
 ```
 
-## 🗄️ Recursos do Cliente de Banco de Dados
+## 🗄️ Database Client Features
 
-O cliente PostgreSQL (`src/internal/database/postgres.go`) oferece:
+The PostgreSQL client (`src/internal/database/postgres.go`) provides:
 
-- ⚡ **Connection pooling** - Pool de conexões configurável (min/max)
-- 💚 **Health checks** - Monitoramento de disponibilidade do banco
-- 🔄 **Reconexão automática** - Gerenciamento do ciclo de vida das conexões
-- 📊 **Estatísticas do pool** - Monitoramento de uso das conexões
-- 🛑 **Graceful shutdown** - Encerramento seguro e controlado
+- ⚡ **Connection pooling** - Configurable connection pool (min/max)
+- 💚 **Health checks** - Database availability monitoring
+- 🔄 **Automatic reconnection** - Connection lifecycle management
+- 📊 **Pool statistics** - Connection usage monitoring
+- 🛑 **Graceful shutdown** - Safe and controlled shutdown
 
-## 🛑 Parar o Banco de Dados
+## 🛑 Stop the Database
 
 ```bash
 docker-compose down
@@ -105,29 +105,29 @@ To remove the database volume as well:
 docker-compose down -v
 ```
 
-## 🛠️ Stack Tecnológica
+## 🛠️ Technology Stack
 
-| Tecnologia | Descrição |
-|------------|-----------|
-| **Go 1.25+** | Linguagem de programação principal |
-| **pgx/v5** | Driver PostgreSQL de alta performance |
-| **zap** | Logging estruturado e eficiente |
-| **PostgreSQL 17** | Banco de dados relacional |
-| **Docker** | Containerização e deploy |
-
----
-
-## 🎯 Próximos Passos
-
-- 📖 Explore a [documentação do banco de dados](database/schema.md)
-- 🔍 Veja a [visão do produto](../docs_old/product.md)
-- 🚀 Configure seu ambiente de desenvolvimento
-- 🤝 Contribua com o projeto
+| Technology | Description |
+|------------|-------------|
+| **Go 1.25+** | Main programming language |
+| **pgx/v5** | High-performance PostgreSQL driver |
+| **zap** | Structured and efficient logging |
+| **PostgreSQL 17** | Relational database |
+| **Docker** | Containerization and deployment |
 
 ---
 
-## 📞 Suporte
+## 🎯 Next Steps
 
-Para dúvidas ou sugestões, abra uma issue no repositório.
+- 📖 Explore the [database documentation](database/schema.md)
+- 🔍 See the [product vision](product/overview.md)
+- 🚀 Set up your development environment
+- 🤝 Contribute to the project
 
-**EasyQueue** - *Chegue na hora certa. Atenda no ritmo certo. Sem espera.* ✨
+---
+
+## 📞 Support
+
+For questions or suggestions, open an issue in the repository.
+
+**EasyQueue** - *Arrive at the right time. Serve at the right pace. No waiting.* ✨

@@ -1,11 +1,11 @@
-# 📁 Estrutura do Projeto
+# 📁 Project Structure
 
-Esta página descreve a organização de arquivos e diretórios do EasyQueue.
+This page describes the file and directory organization of EasyQueue.
 
-## 📑 Índice
+## 📋 Table of Contents
 
-- [Visão Geral](#🌳-visão-geral)
-- [Descrição dos Diretórios](#📦-descrição-dos-diretórios)
+- [Overview](#🌳-overview)
+- [Directory Description](#📦-directory-description)
   - [/src/internal/](#srcinternal)
   - [/src/internal/cmd/](#srcinternalcmd)
   - [/src/internal/config/](#srcinternalconfig)
@@ -13,90 +13,90 @@ Esta página descreve a organização de arquivos e diretórios do EasyQueue.
   - [/src/internal/log/](#srcinternallog)
   - [/src/internal/singletons/](#srcinternalsingletons)
   - [/src/internal/tracing/](#srcinternaltracing)
-- [Arquivos de Configuração](#⚙️-arquivos-de-configuração)
-- [Convenções de Código](#📝-convenções-de-código)
-- [Padrões Arquiteturais](#🏗️-padrões-arquiteturais)
+- [Configuration Files](#⚙️-configuration-files)
+- [Code Conventions](#📝-code-conventions)
+- [Architectural Patterns](#🏗️-architectural-patterns)
 
 ---
 
-## 🌳 Visão Geral
+## 🌳 Overview
 
 ```
 easy-queue-go/
-├── 📄 .env                      # Variáveis de ambiente (não versionado)
-├── 📄 .env.example              # Template de variáveis de ambiente
-├── 📄 .gitignore                # Arquivos ignorados pelo Git
-├── 📄 docker-compose.yml        # Configuração do PostgreSQL
-├── 📄 go.mod                    # Dependências do Go
-├── 📄 go.sum                    # Checksums das dependências
-├── 📄 README.md                 # Documentação principal
+├── 📄 .env                      # Environment variables (not versioned)
+├── 📄 .env.example              # Environment variable template
+├── 📄 .gitignore                # Files ignored by Git
+├── 📄 docker-compose.yml        # PostgreSQL configuration
+├── 📄 go.mod                    # Go dependencies
+├── 📄 go.sum                    # Dependency checksums
+├── 📄 README.md                 # Main documentation
 │
-├── 📂 configs/                  # Arquivos de configuração
+├── 📂 configs/                  # Configuration files
 │   └── config.yaml
 │
-├── 📂 docs/                     # Documentação do projeto
-│   ├── index.html               # Página principal da documentação
-│   ├── README.md                # Home da documentação
-│   ├── _sidebar.md              # Menu lateral
-│   ├── getting-started.md       # Guia de início
-│   ├── project-structure.md     # Este arquivo
-│   └── database/                # Documentação do banco de dados
-│       └── schema.md            # Schema e diagramas
+├── 📂 docs/                     # Project documentation
+│   ├── index.html               # Documentation main page
+│   ├── README.md                # Documentation home
+│   ├── _sidebar.md              # Sidebar menu
+│   ├── getting-started.md       # Getting started guide
+│   ├── project-structure.md     # This file
+│   └── database/                # Database documentation
+│       └── schema.md            # Schema and diagrams
 │
-├── 📂 docs_old/                 # Documentação legada
-│   └── product.md               # Visão do produto
+├── 📂 docs_old/                 # Legacy documentation
+│   └── product.md               # Product vision
 │
-└── 📂 src/                      # Código fonte
-    └── internal/                # Pacotes internos (não exportáveis)
-        ├── cmd/                 # Ponto de entrada da aplicação
+└── 📂 src/                      # Source code
+    └── internal/                # Internal packages (not exportable)
+        ├── cmd/                 # Application entry point
         │   └── main.go
         │
-        ├── config/              # Gerenciamento de configuração
-        │   ├── db_config.go     # Configuração do banco de dados
-        │   └── initializer.go   # Inicialização de configs
+        ├── config/              # Configuration management
+        │   ├── db_config.go     # Database configuration
+        │   └── initializer.go   # Config initialization
         │
-        ├── infra/               # Infraestrutura e integrações
-        │   ├── database/        # Clientes de banco de dados
-        │   │   └── postgres.go  # Cliente PostgreSQL
-        │   └── interfaces.go    # Interfaces de infraestrutura
+        ├── infra/               # Infrastructure and integrations
+        │   ├── database/        # Database clients
+        │   │   └── postgres.go  # PostgreSQL client
+        │   └── interfaces.go    # Infrastructure interfaces
         │
-        ├── log/                 # Sistema de logging
-        │   └── logger.go        # Logger estruturado (Zap)
+        ├── log/                 # Logging system
+        │   └── logger.go        # Structured logger (Zap)
         │
-        ├── routes/              # Configuração de rotas
-        │   └── router.go        # Setup do router Gin
+        ├── routes/              # Route configuration
+        │   └── router.go        # Gin router setup
         │
-        ├── handlers/            # Handlers HTTP
+        ├── handlers/            # HTTP handlers
         │   └── health_handler.go # Health check endpoint
         │
-        ├── singletons/          # Instâncias singleton
-        │   └── initializer.go   # Inicialização de singletons
+        ├── singletons/          # Singleton instances
+        │   └── initializer.go   # Singleton initialization
         │
-        └── tracing/             # Tracing distribuído
-            ├── tracer.go        # Inicialização OpenTelemetry
-            └── config.go        # Configuração de tracing
+        └── tracing/             # Distributed tracing
+            ├── tracer.go        # OpenTelemetry initialization
+            └── config.go        # Tracing configuration
 ```
 
-## 📦 Descrição dos Diretórios
+## 📦 Directory Description
 
 ### `/src/internal/`
 
-Contém todo o código fonte da aplicação. O uso de `internal/` garante que esses pacotes não possam ser importados por projetos externos.
+Contains all application source code. Using `internal/` ensures these packages cannot be imported by external projects.
 
 #### `/src/internal/cmd/`
 
-**Responsabilidade:** Ponto de entrada da aplicação.
+**Responsibility:** Application entry point.
 
-- `main.go` - Função `main()` que inicializa e executa a aplicação
+- `main.go` - `main()` function that initializes and runs the application
 
 #### `/src/internal/config/`
 
-**Responsabilidade:** Gerenciamento de configurações da aplicação.
+**Responsibility:** Application configuration management.
 
-- `db_config.go` - Estruturas e funções para configuração do banco de dados
-- `initializer.go` - Carregamento de configurações de variáveis de ambiente
+- `db_config.go` - Structures and functions for database configuration
+- `initializer.go` - Loading configurations from environment variables
 
-**Exemplo de uso:**
+**Usage example:**
 ```go
 cfg := config.LoadDatabaseConfig()
 ```

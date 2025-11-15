@@ -1,56 +1,56 @@
-# 🚀 Guia de Início Rápido
+# 🚀 Quick Start Guide
 
-Este guia irá ajudá-lo a configurar e executar o EasyQueue em sua máquina local.
+This guide will help you set up and run EasyQueue on your local machine.
 
-## 📑 Índice
+## 📑 Table of Contents
 
-- [Pré-requisitos](#📋-pré-requisitos)
-- [Instalação](#📥-instalação)
-  - [1. Clone o Repositório](#1-clone-o-repositório)
-  - [2. Configure o Banco de Dados](#2-configure-o-banco-de-dados)
-  - [3. Configure as Variáveis de Ambiente](#3-configure-as-variáveis-de-ambiente)
-  - [4. Instale as Dependências](#4-instale-as-dependências)
-  - [5. Execute a Aplicação](#5-execute-a-aplicação)
-- [Verificação](#✅-verificação)
-- [Parando a Aplicação](#🛑-parando-a-aplicação)
-- [Solução de Problemas](#🔧-solução-de-problemas)
-- [Próximos Passos](#📚-próximos-passos)
-- [Dicas de Desenvolvimento](#💡-dicas-de-desenvolvimento)
+- [Prerequisites](#📋-prerequisites)
+- [Installation](#📥-installation)
+  - [1. Clone the Repository](#1-clone-the-repository)
+  - [2. Set Up the Database](#2-set-up-the-database)
+  - [3. Configure Environment Variables](#3-configure-environment-variables)
+  - [4. Install Dependencies](#4-install-dependencies)
+  - [5. Run the Application](#5-run-the-application)
+- [Verification](#✅-verification)
+- [Stopping the Application](#🛑-stopping-the-application)
+- [Troubleshooting](#🔧-troubleshooting)
+- [Next Steps](#📚-next-steps)
+- [Development Tips](#💡-development-tips)
 
 ---
 
-## 📋 Pré-requisitos
+## 📋 Prerequisites
 
-Antes de começar, certifique-se de ter instalado:
+Before you begin, make sure you have installed:
 
 - **Go 1.25+** - [Download](https://golang.org/dl/)
 - **Docker** - [Download](https://www.docker.com/get-started)
-- **Docker Compose** - Geralmente incluído com Docker Desktop
-- **Git** - Para clonar o repositório
+- **Docker Compose** - Usually included with Docker Desktop
+- **Git** - To clone the repository
 
-## 📥 Instalação
+## 📥 Installation
 
-### 1. Clone o Repositório
+### 1. Clone the Repository
 
 ```bash
 git clone https://github.com/ericomonteiro/easy-queue-go.git
 cd easy-queue-go
 ```
 
-### 2. Configure o Banco de Dados
+### 2. Set Up the Database
 
-Inicie o container PostgreSQL usando Docker Compose:
+Start the PostgreSQL container using Docker Compose:
 
 ```bash
 docker-compose up -d
 ```
 
-Isso irá:
-- Criar um container PostgreSQL 17
-- Configurar o banco de dados `easyqueue`
-- Expor a porta `5432` no localhost
+This will:
+- Create a PostgreSQL 17 container
+- Set up the `easyqueue` database
+- Expose port `5432` on localhost
 
-**Credenciais padrão:**
+**Default credentials:**
 ```
 Host: localhost
 Port: 5432
@@ -59,15 +59,15 @@ User: easyqueue
 Password: easyqueue123
 ```
 
-### 3. Configure as Variáveis de Ambiente
+### 3. Configure Environment Variables
 
-Copie o arquivo de exemplo:
+Copy the example file:
 
 ```bash
 cp .env.example .env
 ```
 
-Edite o arquivo `.env` se necessário:
+Edit the `.env` file if needed:
 
 ```env
 DB_HOST=localhost
@@ -78,124 +78,124 @@ DB_NAME=easyqueue
 DB_SSLMODE=disable
 ```
 
-### 4. Instale as Dependências
+### 4. Install Dependencies
 
 ```bash
 go mod download
 ```
 
-### 5. Execute a Aplicação
+### 5. Run the Application
 
 ```bash
 go run src/internal/cmd/main.go
 ```
 
-Ou compile e execute:
+Or build and run:
 
 ```bash
 go build -o easyqueue src/internal/cmd/main.go
 ./easyqueue
 ```
 
-## ✅ Verificação
+## ✅ Verification
 
-Para verificar se tudo está funcionando:
+To verify everything is working:
 
-### 1. Verifique o Status do PostgreSQL
+### 1. Check PostgreSQL Status
 
 ```bash
 docker ps
 ```
 
-Você deve ver o container `easy-queue-go-postgres-1` rodando.
+You should see the `easy-queue-go-postgres-1` container running.
 
-### 2. Teste a Conexão com o Banco
+### 2. Test Database Connection
 
 ```bash
 docker exec -it easy-queue-go-postgres-1 psql -U easyqueue -d easyqueue
 ```
 
-### 3. Verifique os Logs da Aplicação
+### 3. Check Application Logs
 
-A aplicação deve exibir logs estruturados indicando:
-- ✅ Conexão com o banco de dados estabelecida
-- ✅ Pool de conexões inicializado
-- ✅ Aplicação rodando
+The application should display structured logs indicating:
+- ✅ Database connection established
+- ✅ Connection pool initialized
+- ✅ Application running
 
-## 🛑 Parando a Aplicação
+## 🛑 Stopping the Application
 
-### Parar a Aplicação Go
+### Stop the Go Application
 
-Pressione `Ctrl+C` no terminal onde a aplicação está rodando.
+Press `Ctrl+C` in the terminal where the application is running.
 
-### Parar o PostgreSQL
+### Stop PostgreSQL
 
 ```bash
 docker-compose down
 ```
 
-Para remover também os volumes (dados do banco):
+To also remove volumes (database data):
 
 ```bash
 docker-compose down -v
 ```
 
-## 🔧 Solução de Problemas
+## 🔧 Troubleshooting
 
-### Erro: "connection refused"
+### Error: "connection refused"
 
-**Problema:** A aplicação não consegue conectar ao PostgreSQL.
+**Problem:** The application cannot connect to PostgreSQL.
 
-**Solução:**
-1. Verifique se o container está rodando: `docker ps`
-2. Verifique as credenciais no arquivo `.env`
-3. Certifique-se de que a porta 5432 não está sendo usada por outro processo
+**Solution:**
+1. Check if the container is running: `docker ps`
+2. Verify credentials in the `.env` file
+3. Make sure port 5432 is not being used by another process
 
-### Erro: "port already in use"
+### Error: "port already in use"
 
-**Problema:** A porta 5432 já está em uso.
+**Problem:** Port 5432 is already in use.
 
-**Solução:**
-1. Pare qualquer instância local do PostgreSQL
-2. Ou altere a porta no `docker-compose.yml`:
+**Solution:**
+1. Stop any local PostgreSQL instance
+2. Or change the port in `docker-compose.yml`:
 ```yaml
 ports:
-  - "5433:5432"  # Usa porta 5433 no host
+  - "5433:5432"  # Use port 5433 on host
 ```
 
-### Erro: "go: module not found"
+### Error: "go: module not found"
 
-**Problema:** Dependências não instaladas.
+**Problem:** Dependencies not installed.
 
-**Solução:**
+**Solution:**
 ```bash
 go mod tidy
 go mod download
 ```
 
-## 📚 Próximos Passos
+## 📚 Next Steps
 
-Agora que você tem o EasyQueue rodando:
+Now that you have EasyQueue running:
 
-- 📖 Explore a [Estrutura do Projeto](project-structure.md)
-- 🗄️ Veja o [Schema do Banco de Dados](database/schema.md)
-- 🎯 Entenda a [Visão do Produto](product/overview.md)
-- 🔧 Configure a [API](api/endpoints.md)
+- 📖 Explore the [Project Structure](project-structure.md)
+- 🗄️ See the [Database Schema](database/schema.md)
+- 🎯 Understand the [Product Vision](product/overview.md)
+- 🔧 Configure the [API](api/endpoints.md)
 
-## 💡 Dicas de Desenvolvimento
+## 💡 Development Tips
 
 ### Hot Reload
 
-Para desenvolvimento com hot reload, use [Air](https://github.com/cosmtrek/air):
+For development with hot reload, use [Air](https://github.com/cosmtrek/air):
 
 ```bash
 go install github.com/cosmtrek/air@latest
 air
 ```
 
-### Debug no VS Code
+### Debug in VS Code
 
-Adicione ao `.vscode/launch.json`:
+Add to `.vscode/launch.json`:
 
 ```json
 {
@@ -214,9 +214,9 @@ Adicione ao `.vscode/launch.json`:
 }
 ```
 
-### Logs Estruturados
+### Structured Logs
 
-A aplicação usa Zap para logging estruturado. Para visualizar logs formatados:
+The application uses Zap for structured logging. To view formatted logs:
 
 ```bash
 go run src/internal/cmd/main.go | jq
@@ -224,4 +224,4 @@ go run src/internal/cmd/main.go | jq
 
 ---
 
-**Pronto!** Você está preparado para começar a desenvolver com o EasyQueue! 🎉
+**Ready!** You're all set to start developing with EasyQueue! 🎉

@@ -88,11 +88,17 @@ CREATE TABLE users (
     email VARCHAR(255) UNIQUE NOT NULL,
     password_hash VARCHAR(255) NOT NULL,
     phone VARCHAR(20),
-    role VARCHAR(10) NOT NULL CHECK (role IN ('BO', 'CU')),
+    roles VARCHAR(2)[] DEFAULT '{}',
     is_active BOOLEAN DEFAULT true,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
+
+-- Constraints for roles array
+ALTER TABLE users ADD CONSTRAINT check_roles_not_empty 
+    CHECK (array_length(roles, 1) > 0);
+ALTER TABLE users ADD CONSTRAINT check_roles_valid 
+    CHECK (roles <@ ARRAY['BO', 'CU', 'AD']::VARCHAR(2)[]);
 
 -- Tabela de Business Owners
 CREATE TABLE business_owners (
@@ -119,9 +125,12 @@ CREATE TABLE customers (
 
 -- Índices
 CREATE INDEX idx_users_email ON users(email);
-CREATE INDEX idx_users_role ON users(role);
+CREATE INDEX idx_users_roles ON users USING GIN(roles);
 CREATE INDEX idx_business_owners_user_id ON business_owners(user_id);
 CREATE INDEX idx_customers_user_id ON customers(user_id);
+
+-- Comments
+COMMENT ON COLUMN users.roles IS 'User roles: BO (Business Owner), CU (Customer), and/or AD (Admin)';
 ```
 
 **Arquivo:** `000001_create_users_tables.down.sql`

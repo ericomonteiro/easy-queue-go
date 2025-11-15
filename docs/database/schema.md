@@ -28,7 +28,7 @@ erDiagram
         string email UK
         string password_hash
         string phone
-        string role "BO or CU"
+        array roles "Array: BO, CU, and/or AD"
         timestamp created_at
         timestamp updated_at
         boolean is_active
@@ -219,7 +219,7 @@ erDiagram
 ```sql
 -- User lookups
 CREATE INDEX idx_users_email ON USERS(email);
-CREATE INDEX idx_users_role ON USERS(role);
+CREATE INDEX idx_users_roles ON USERS USING GIN(roles);
 
 -- Business queries
 CREATE INDEX idx_businesses_owner_id ON BUSINESSES(owner_id);

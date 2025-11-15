@@ -6,52 +6,63 @@ import (
 	"github.com/google/uuid"
 )
 
-// UserRole representa os tipos de usuário no sistema
+// UserRole represents the user types in the system
 type UserRole string
 
 const (
 	RoleBusinessOwner UserRole = "BO"
 	RoleCustomer      UserRole = "CU"
+	RoleAdmin         UserRole = "AD"
 )
 
-// User representa um usuário no sistema
+// User represents a user in the system
 type User struct {
-	ID           uuid.UUID `json:"id"`
-	Email        string    `json:"email"`
-	PasswordHash string    `json:"-"` // Não expor no JSON
-	Phone        string    `json:"phone"`
-	Role         UserRole  `json:"role"`
-	IsActive     bool      `json:"is_active"`
-	CreatedAt    time.Time `json:"created_at"`
-	UpdatedAt    time.Time `json:"updated_at"`
+	ID           uuid.UUID  `json:"id"`
+	Email        string     `json:"email"`
+	PasswordHash string     `json:"-"` // Do not expose in JSON
+	Phone        string     `json:"phone"`
+	Roles        []UserRole `json:"roles"`
+	IsActive     bool       `json:"is_active"`
+	CreatedAt    time.Time  `json:"created_at"`
+	UpdatedAt    time.Time  `json:"updated_at"`
 }
 
-// CreateUserRequest representa a requisição para criar um usuário
+// CreateUserRequest represents the request to create a user
 type CreateUserRequest struct {
-	Email    string   `json:"email" binding:"required,email"`
-	Password string   `json:"password" binding:"required,min=6"`
-	Phone    string   `json:"phone" binding:"required"`
-	Role     UserRole `json:"role" binding:"required,oneof=BO CU"`
+	Email    string     `json:"email" binding:"required,email"`
+	Password string     `json:"password" binding:"required,min=6"`
+	Phone    string     `json:"phone" binding:"required"`
+	Roles    []UserRole `json:"roles" binding:"required,min=1,dive,oneof=BO CU AD"`
 }
 
-// UserResponse representa a resposta com dados do usuário
+// UserResponse represents the response with user data
 type UserResponse struct {
-	ID        uuid.UUID `json:"id"`
-	Email     string    `json:"email"`
-	Phone     string    `json:"phone"`
-	Role      UserRole  `json:"role"`
-	IsActive  bool      `json:"is_active"`
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"updated_at"`
+	ID        uuid.UUID  `json:"id"`
+	Email     string     `json:"email"`
+	Phone     string     `json:"phone"`
+	Roles     []UserRole `json:"roles"`
+	IsActive  bool       `json:"is_active"`
+	CreatedAt time.Time  `json:"created_at"`
+	UpdatedAt time.Time  `json:"updated_at"`
 }
 
-// ToResponse converte um User para UserResponse
+// HasRole checks if the user has a specific role
+func (u *User) HasRole(role UserRole) bool {
+	for _, r := range u.Roles {
+		if r == role {
+			return true
+		}
+	}
+	return false
+}
+
+// ToResponse converts a User to UserResponse
 func (u *User) ToResponse() *UserResponse {
 	return &UserResponse{
 		ID:        u.ID,
 		Email:     u.Email,
 		Phone:     u.Phone,
-		Role:      u.Role,
+		Roles:     u.Roles,
 		IsActive:  u.IsActive,
 		CreatedAt: u.CreatedAt,
 		UpdatedAt: u.UpdatedAt,

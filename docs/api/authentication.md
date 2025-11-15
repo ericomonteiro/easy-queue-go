@@ -19,7 +19,7 @@ Register a new user.
   "email": "user@example.com",
   "password": "password123",
   "phone": "+5511999999999",
-  "role": "CU"
+  "roles": ["CU"]
 }
 ```
 
@@ -29,7 +29,7 @@ Register a new user.
   "id": "uuid",
   "email": "user@example.com",
   "phone": "+5511999999999",
-  "role": "CU",
+  "roles": ["CU"],
   "is_active": true,
   "created_at": "2024-01-01T00:00:00Z",
   "updated_at": "2024-01-01T00:00:00Z"
@@ -60,7 +60,7 @@ Authenticate user and receive tokens.
     "id": "uuid",
     "email": "user@example.com",
     "phone": "+5511999999999",
-    "role": "CU",
+    "roles": ["CU"],
     "is_active": true,
     "created_at": "2024-01-01T00:00:00Z",
     "updated_at": "2024-01-01T00:00:00Z"
@@ -114,7 +114,7 @@ Authorization: Bearer {access_token}
   "id": "uuid",
   "email": "user@example.com",
   "phone": "+5511999999999",
-  "role": "CU",
+  "roles": ["CU"],
   "is_active": true,
   "created_at": "2024-01-01T00:00:00Z",
   "updated_at": "2024-01-01T00:00:00Z"
@@ -144,7 +144,7 @@ Authorization: Bearer {access_token}
   "id": "uuid",
   "email": "user@example.com",
   "phone": "+5511999999999",
-  "role": "CU",
+  "roles": ["CU"],
   "is_active": true,
   "created_at": "2024-01-01T00:00:00Z",
   "updated_at": "2024-01-01T00:00:00Z"
@@ -161,6 +161,8 @@ Authorization: Bearer {access_token}
 
 - `BO` - Business Owner (admin)
 - `CU` - Customer (regular user)
+- `AD` - Admin (system administrator)
+- **Multiple Roles**: A user can have multiple roles simultaneously: `["BO", "CU"]`, `["BO", "AD"]`, etc.
 
 ## Common Error Responses
 
@@ -213,7 +215,7 @@ Authorization: Bearer {access_token}
 # Register
 curl -X POST http://localhost:8080/users \
   -H "Content-Type: application/json" \
-  -d '{"email":"test@example.com","password":"pass123","phone":"+5511999999999","role":"CU"}'
+  -d '{"email":"test@example.com","password":"pass123","phone":"+5511999999999","roles":["CU"]}'
 
 # Login
 curl -X POST http://localhost:8080/auth/login \

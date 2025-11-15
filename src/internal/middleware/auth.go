@@ -65,7 +65,7 @@ func AuthMiddleware(authService services.AuthService) gin.HandlerFunc {
 		log.Info(ctx, "User authenticated",
 			zap.String("user_id", claims.UserID.String()),
 			zap.String("email", claims.Email),
-			zap.String("role", string(claims.Role)),
+			zap.Int("roles_count", len(claims.Roles)),
 		)
 
 		c.Next()
@@ -100,8 +100,8 @@ func RequireRole(roles ...models.UserRole) gin.HandlerFunc {
 
 		// Check if user has one of the required roles
 		hasRole := false
-		for _, role := range roles {
-			if claims.Role == role {
+		for _, requiredRole := range roles {
+			if claims.HasRole(requiredRole) {
 				hasRole = true
 				break
 			}
@@ -110,7 +110,7 @@ func RequireRole(roles ...models.UserRole) gin.HandlerFunc {
 		if !hasRole {
 			log.Warn(ctx, "User does not have required role",
 				zap.String("user_id", claims.UserID.String()),
-				zap.String("user_role", string(claims.Role)),
+				zap.Int("user_roles_count", len(claims.Roles)),
 			)
 			c.JSON(http.StatusForbidden, gin.H{
 				"error": "insufficient permissions",

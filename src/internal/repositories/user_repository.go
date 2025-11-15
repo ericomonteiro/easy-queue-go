@@ -10,31 +10,32 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
-// UserRepository define a interface para operações de usuário
+// UserRepository defines the interface for user operations
 type UserRepository interface {
 	Create(ctx context.Context, user *models.User) error
 	FindByID(ctx context.Context, id uuid.UUID) (*models.User, error)
 	FindByEmail(ctx context.Context, email string) (*models.User, error)
+	FindAll(ctx context.Context) ([]*models.User, error)
 	Update(ctx context.Context, user *models.User) error
 	Delete(ctx context.Context, id uuid.UUID) error
 }
 
-// userRepository implementa UserRepository
+// userRepository implements UserRepository
 type userRepository struct {
 	pool *pgxpool.Pool
 }
 
-// NewUserRepository cria uma nova instância de UserRepository
+// NewUserRepository creates a new instance of UserRepository
 func NewUserRepository(pool *pgxpool.Pool) UserRepository {
 	return &userRepository{
 		pool: pool,
 	}
 }
 
-// Create insere um novo usuário no banco de dados
+// Create inserts a new user into the database
 func (r *userRepository) Create(ctx context.Context, user *models.User) error {
 	query := `
-		INSERT INTO users (id, email, password_hash, phone, role, is_active, created_at, updated_at)
+		INSERT INTO users (id, email, password_hash, phone, roles, is_active, created_at, updated_at)
 		VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
 	`
 
@@ -43,7 +44,7 @@ func (r *userRepository) Create(ctx context.Context, user *models.User) error {
 		user.Email,
 		user.PasswordHash,
 		user.Phone,
-		user.Role,
+		user.Roles,
 		user.IsActive,
 		user.CreatedAt,
 		user.UpdatedAt,
@@ -56,10 +57,10 @@ func (r *userRepository) Create(ctx context.Context, user *models.User) error {
 	return nil
 }
 
-// FindByID busca um usuário pelo ID
+// FindByID retrieves a user by ID
 func (r *userRepository) FindByID(ctx context.Context, id uuid.UUID) (*models.User, error) {
 	query := `
-		SELECT id, email, password_hash, phone, role, is_active, created_at, updated_at
+		SELECT id, email, password_hash, phone, roles, is_active, created_at, updated_at
 		FROM users
 		WHERE id = $1
 	`
@@ -70,7 +71,7 @@ func (r *userRepository) FindByID(ctx context.Context, id uuid.UUID) (*models.Us
 		&user.Email,
 		&user.PasswordHash,
 		&user.Phone,
-		&user.Role,
+		&user.Roles,
 		&user.IsActive,
 		&user.CreatedAt,
 		&user.UpdatedAt,
@@ -86,10 +87,10 @@ func (r *userRepository) FindByID(ctx context.Context, id uuid.UUID) (*models.Us
 	return user, nil
 }
 
-// FindByEmail busca um usuário pelo email
+// FindByEmail retrieves a user by email
 func (r *userRepository) FindByEmail(ctx context.Context, email string) (*models.User, error) {
 	query := `
-		SELECT id, email, password_hash, phone, role, is_active, created_at, updated_at
+		SELECT id, email, password_hash, phone, roles, is_active, created_at, updated_at
 		FROM users
 		WHERE email = $1
 	`
@@ -100,7 +101,7 @@ func (r *userRepository) FindByEmail(ctx context.Context, email string) (*models
 		&user.Email,
 		&user.PasswordHash,
 		&user.Phone,
-		&user.Role,
+		&user.Roles,
 		&user.IsActive,
 		&user.CreatedAt,
 		&user.UpdatedAt,
@@ -116,11 +117,51 @@ func (r *userRepository) FindByEmail(ctx context.Context, email string) (*models
 	return user, nil
 }
 
-// Update atualiza um usuário existente
+// FindAll returns all users
+func (r *userRepository) FindAll(ctx context.Context) ([]*models.User, error) {
+	query := `
+		SELECT id, email, password_hash, phone, roles, is_active, created_at, updated_at
+		FROM users
+		ORDER BY created_at DESC
+	`
+
+	rows, err := r.pool.Query(ctx, query)
+	if err != nil {
+		return nil, fmt.Errorf("failed to query users: %w", err)
+	}
+	defer rows.Close()
+
+	var users []*models.User
+	for rows.Next() {
+		user := &models.User{}
+		err := rows.Scan(
+			&user.ID,
+			&user.Email,
+			&user.PasswordHash,
+			&user.Phone,
+			&user.Roles,
+			&user.IsActive,
+			&user.CreatedAt,
+			&user.UpdatedAt,
+		)
+		if err != nil {
+			return nil, fmt.Errorf("failed to scan user: %w", err)
+		}
+		users = append(users, user)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("error iterating users: %w", err)
+	}
+
+	return users, nil
+}
+
+// Update updates an existing user
 func (r *userRepository) Update(ctx context.Context, user *models.User) error {
 	query := `
 		UPDATE users
-		SET email = $2, password_hash = $3, phone = $4, role = $5, is_active = $6, updated_at = $7
+		SET email = $2, password_hash = $3, phone = $4, roles = $5, is_active = $6, updated_at = $7
 		WHERE id = $1
 	`
 
@@ -129,7 +170,7 @@ func (r *userRepository) Update(ctx context.Context, user *models.User) error {
 		user.Email,
 		user.PasswordHash,
 		user.Phone,
-		user.Role,
+		user.Roles,
 		user.IsActive,
 		user.UpdatedAt,
 	)
@@ -145,7 +186,7 @@ func (r *userRepository) Update(ctx context.Context, user *models.User) error {
 	return nil
 }
 
-// Delete remove um usuário do banco de dados
+// Delete removes a user from the database
 func (r *userRepository) Delete(ctx context.Context, id uuid.UUID) error {
 	query := `DELETE FROM users WHERE id = $1`
 

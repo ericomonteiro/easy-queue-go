@@ -11,6 +11,7 @@
 ## ✨ Key Features
 
 - 🔐 **JWT Authentication** - Secure stateless authentication with access and refresh tokens
+- 👥 **Multi-Role Support** - Users can be both business owners and customers simultaneously
 - 🌍 **Smart Geolocation** - Proximity-based check-in
 - ⏱️ **Real-Time Estimates** - Accurate and updated wait times
 - 🔔 **Smart Notifications** - Timely arrival alerts
@@ -132,10 +133,12 @@ docker-compose down -v
 ## 🎯 Next Steps
 
 - 🔐 Learn about [Authentication & Authorization](features/authentication.md)
+- 👥 Discover [Multi-Role Support](features/multi-role-support.md)
 - 📖 Explore the [API documentation](api/authentication.md)
 - 🗄️ Review the [database schema](database/schema.md)
 - 👤 Understand [User Management](features/user-management.md)
 - 🔍 See the [product vision](product/overview.md)
+- 📋 Check the [Changelog](CHANGELOG.md) for recent updates
 - 🚀 Set up your development environment
 - 🤝 Contribute to the project
 

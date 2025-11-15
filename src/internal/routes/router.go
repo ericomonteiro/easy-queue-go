@@ -3,6 +3,7 @@ package routes
 import (
 	"easy-queue-go/src/internal/handlers"
 	"easy-queue-go/src/internal/middleware"
+	"easy-queue-go/src/internal/models"
 	"easy-queue-go/src/internal/services"
 
 	"github.com/gin-gonic/gin"
@@ -48,12 +49,12 @@ func SetupRouter(
 			usersGroup.GET("/by-email", userHandler.GetUserByEmail)
 		}
 
-		// Admin-only routes example (uncomment when needed)
-		// adminGroup := protected.Group("/admin")
-		// adminGroup.Use(middleware.RequireRole(models.RoleBusinessOwner))
-		// {
-		//     adminGroup.GET("/users", userHandler.ListAllUsers)
-		// }
+		// Admin-only routes
+		adminGroup := protected.Group("/admin")
+		adminGroup.Use(middleware.RequireRole(models.RoleAdmin))
+		{
+			adminGroup.GET("/users", userHandler.ListAllUsers)
+		}
 	}
 
 	return router

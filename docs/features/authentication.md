@@ -57,7 +57,7 @@ JWT_REFRESH_TOKEN_TTL=168h    # Refresh token lifetime (7 days)
 {
   "user_id": "uuid",
   "email": "user@example.com",
-  "role": "BO",              // BO (Business Owner) or CU (Customer)
+  "roles": ["BO", "CU"],     // Array of roles: BO (Business Owner) and/or CU (Customer)
   "type": "access",          // "access" or "refresh"
   "exp": 1234567890,         // Expiration timestamp
   "iat": 1234567890,         // Issued at timestamp
@@ -80,7 +80,7 @@ Content-Type: application/json
   "email": "user@example.com",
   "password": "securepassword123",
   "phone": "+5511999999999",
-  "role": "CU"
+  "roles": ["CU"]
 }
 ```
 
@@ -90,7 +90,7 @@ Content-Type: application/json
   "id": "uuid",
   "email": "user@example.com",
   "phone": "+5511999999999",
-  "role": "CU",
+  "roles": ["CU"],
   "is_active": true,
   "created_at": "2024-01-01T00:00:00Z",
   "updated_at": "2024-01-01T00:00:00Z"
@@ -120,7 +120,7 @@ Content-Type: application/json
     "id": "uuid",
     "email": "user@example.com",
     "phone": "+5511999999999",
-    "role": "CU",
+    "roles": ["CU"],
     "is_active": true,
     "created_at": "2024-01-01T00:00:00Z",
     "updated_at": "2024-01-01T00:00:00Z"
@@ -211,6 +211,8 @@ if (response.status === 401) {
 
 - `BO` - Business Owner (admin privileges)
 - `CU` - Customer (regular user)
+- `AD` - Admin (system administrator)
+- **Multiple Roles**: A user can have multiple roles: `["BO", "CU"]`, `["BO", "AD"]`, etc.
 
 ### Protecting Routes by Role
 
@@ -238,7 +240,12 @@ func (h *UserHandler) GetProfile(c *gin.Context) {
     // Access user information
     userID := claims.UserID
     email := claims.Email
-    role := claims.Role
+    roles := claims.Roles
+    
+    // Check if user has a specific role
+    if claims.HasRole(models.RoleBusinessOwner) {
+        // User is a business owner
+    }
     
     // ... handler logic
 }
@@ -319,7 +326,17 @@ curl -X POST http://localhost:8080/users \
     "email": "test@example.com",
     "password": "password123",
     "phone": "+5511999999999",
-    "role": "CU"
+    "roles": ["CU"]
+  }'
+
+# Register a user with multiple roles
+curl -X POST http://localhost:8080/users \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "hybrid@example.com",
+    "password": "password123",
+    "phone": "+5511988888888",
+    "roles": ["BO", "CU"]
   }'
 
 # 2. Login

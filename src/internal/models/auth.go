@@ -35,11 +35,21 @@ type RefreshTokenResponse struct {
 
 // JWTClaims represents the claims stored in JWT tokens
 type JWTClaims struct {
-	UserID uuid.UUID `json:"user_id"`
-	Email  string    `json:"email"`
-	Role   UserRole  `json:"role"`
-	Type   TokenType `json:"type"` // "access" or "refresh"
+	UserID uuid.UUID  `json:"user_id"`
+	Email  string     `json:"email"`
+	Roles  []UserRole `json:"roles"`
+	Type   TokenType  `json:"type"` // "access" or "refresh"
 	jwt.RegisteredClaims
+}
+
+// HasRole checks if the JWT claims contain a specific role
+func (c *JWTClaims) HasRole(role UserRole) bool {
+	for _, r := range c.Roles {
+		if r == role {
+			return true
+		}
+	}
+	return false
 }
 
 // TokenType represents the type of JWT token

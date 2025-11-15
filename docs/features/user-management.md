@@ -29,9 +29,11 @@ Defines data structures:
 - **CreateUserRequest**: DTO for user creation
 - **UserResponse**: DTO for HTTP response
 
-**User Types:**
+**User Roles:**
 - `BO` - Business Owner
 - `CU` - Customer
+- `AD` - Admin
+- Users can have multiple roles simultaneously: `["BO", "CU"]`, `["BO", "AD"]`, etc.
 
 ### 2. Repository (`src/internal/repositories/user_repository.go`)
 
@@ -58,7 +60,8 @@ Contains business logic:
 **Business Rules:**
 - Email must be unique
 - Password must have at least 8 characters
-- Role must be BO or CU
+- At least one role must be provided (BO, CU, and/or AD)
+- Users can have multiple roles
 - Users are created as active by default
 
 ### 4. Handler (`src/internal/handlers/user_handler.go`)
@@ -97,13 +100,13 @@ Content-Type: application/json
   "email": "user@example.com",
   "password": "senha123456",
   "phone": "+5511999999999",
-  "role": "CU"
+  "roles": ["CU"]
 }
 ```
 
 ### 2. Handler
 - Validates JSON
-- Checks if role is valid
+- Validates roles array (handled by binding tag)
 - Calls the service
 
 ### 3. Service
@@ -123,7 +126,7 @@ Content-Type: application/json
   "id": "550e8400-e29b-41d4-a716-446655440000",
   "email": "user@example.com",
   "phone": "+5511999999999",
-  "role": "CU",
+  "roles": ["CU"],
   "is_active": true,
   "created_at": "2024-11-15T20:10:00Z",
   "updated_at": "2024-11-15T20:10:00Z"
@@ -140,7 +143,8 @@ Content-Type: application/json
 ### Validations
 - Email must be valid (Gin validation)
 - Minimum password length of 8 characters
-- Role must be BO or CU
+- Roles array must contain at least one role
+- Each role must be BO, CU, or AD
 - Unique email in database
 
 ## Observability
@@ -150,7 +154,7 @@ All components use structured logging with Zap:
 ```go
 log.Info(ctx, "Creating new user",
     zap.String("email", req.Email),
-    zap.String("role", string(req.Role)),
+    zap.Int("roles_count", len(req.Roles)),
 )
 ```
 
@@ -160,7 +164,6 @@ Service implements tracing with OpenTelemetry:
 ctx, span := tracer.Start(ctx, "UserService.CreateUser",
     trace.WithAttributes(
         attribute.String("email", req.Email),
-        attribute.String("role", string(req.Role)),
     ),
 )
 defer span.End()
@@ -174,15 +177,21 @@ CREATE TABLE users (
     email VARCHAR(255) UNIQUE NOT NULL,
     password_hash VARCHAR(255) NOT NULL,
     phone VARCHAR(50) NOT NULL,
-    role VARCHAR(2) NOT NULL CHECK (role IN ('BO', 'CU')),
+    roles VARCHAR(2)[] DEFAULT '{}',
     is_active BOOLEAN DEFAULT true,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
+-- Constraints for roles array
+ALTER TABLE users ADD CONSTRAINT check_roles_not_empty 
+    CHECK (array_length(roles, 1) > 0);
+ALTER TABLE users ADD CONSTRAINT check_roles_valid 
+    CHECK (roles <@ ARRAY['BO', 'CU', 'AD']::VARCHAR(2)[]);
+
+-- Indexes
 CREATE INDEX idx_users_email ON users(email);
-CREATE INDEX idx_users_role ON users(role);
-CREATE INDEX idx_users_is_active ON users(is_active);
+CREATE INDEX idx_users_roles ON users USING GIN(roles);
 ```
 
 ## Migrations
@@ -202,14 +211,24 @@ docker-compose exec postgres psql -U postgres -d easyqueue -f /migrations/000001
 ### Manual Testing with curl
 
 ```bash
-# Create user
+# Create user with single role
 curl -X POST http://localhost:8080/users \
   -H "Content-Type: application/json" \
   -d '{
     "email": "test@example.com",
     "password": "senha123456",
     "phone": "+5511999999999",
-    "role": "CU"
+    "roles": ["CU"]
+  }'
+
+# Create user with multiple roles
+curl -X POST http://localhost:8080/users \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "hybrid@example.com",
+    "password": "senha123456",
+    "phone": "+5511988888888",
+    "roles": ["BO", "CU"]
   }'
 
 # Find by ID

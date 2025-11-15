@@ -227,7 +227,7 @@ func (s *authService) generateToken(user *models.User, tokenType models.TokenTyp
 	claims := &models.JWTClaims{
 		UserID: user.ID,
 		Email:  user.Email,
-		Role:   user.Role,
+		Roles:  user.Roles,
 		Type:   tokenType,
 		RegisteredClaims: jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(expiresAt),

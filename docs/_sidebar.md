@@ -13,6 +13,7 @@
 * **Features**
   * [👤 User Management](features/user-management.md)
   * [🔐 Authentication & Authorization](features/authentication.md)
+  * [👥 Multi-Role Support](features/multi-role-support.md)
 
 * **API**
   * [👥 Users API](api/users.md)

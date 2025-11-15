@@ -13,7 +13,7 @@ type HealthResponse struct {
 	Service   string    `json:"service"`
 }
 
-// HealthCheck retorna o status de saúde da aplicação
+// HealthCheck returns the application health status
 func HealthCheck(c *gin.Context) {
 	response := HealthResponse{
 		Status:    "healthy",

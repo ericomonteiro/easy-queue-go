@@ -11,31 +11,31 @@ import (
 	"go.uber.org/zap"
 )
 
-// UserHandler gerencia as requisições HTTP relacionadas a usuários
+// UserHandler manages HTTP requests related to users
 type UserHandler struct {
 	userService services.UserService
 }
 
-// NewUserHandler cria uma nova instância de UserHandler
+// NewUserHandler creates a new instance of UserHandler
 func NewUserHandler(userService services.UserService) *UserHandler {
 	return &UserHandler{
 		userService: userService,
 	}
 }
 
-// ErrorResponse representa uma resposta de erro padrão
+// ErrorResponse represents a standard error response
 type ErrorResponse struct {
 	Error   string `json:"error"`
 	Message string `json:"message,omitempty"`
 }
 
 // CreateUser godoc
-// @Summary Cria um novo usuário
-// @Description Cria um novo usuário no sistema com email, senha, telefone e role
+// @Summary Creates a new user
+// @Description Creates a new user in the system with email, password, phone and role
 // @Tags users
 // @Accept json
 // @Produce json
-// @Param user body models.CreateUserRequest true "Dados do usuário"
+// @Param user body models.CreateUserRequest true "User data"
 // @Success 201 {object} models.UserResponse
 // @Failure 400 {object} ErrorResponse
 // @Failure 409 {object} ErrorResponse
@@ -54,21 +54,11 @@ func (h *UserHandler) CreateUser(c *gin.Context) {
 		return
 	}
 
-	// Validar role
-	if req.Role != models.RoleBusinessOwner && req.Role != models.RoleCustomer {
-		log.Warn(ctx, "Invalid user role", zap.String("role", string(req.Role)))
-		c.JSON(http.StatusBadRequest, ErrorResponse{
-			Error:   "invalid_role",
-			Message: "Role must be 'BO' (Business Owner) or 'CU' (Customer)",
-		})
-		return
-	}
-
 	user, err := h.userService.CreateUser(ctx, &req)
 	if err != nil {
 		log.Error(ctx, "Failed to create user", zap.Error(err))
 		
-		// Verificar se é erro de duplicação
+		// Check if it's a duplication error
 		if err.Error() == "user with email "+req.Email+" already exists" {
 			c.JSON(http.StatusConflict, ErrorResponse{
 				Error:   "user_already_exists",
@@ -93,8 +83,8 @@ func (h *UserHandler) CreateUser(c *gin.Context) {
 }
 
 // GetUserByID godoc
-// @Summary Busca um usuário por ID
-// @Description Retorna os dados de um usuário específico pelo ID
+// @Summary Retrieves a user by ID
+// @Description Returns the data of a specific user by ID
 // @Tags users
 // @Accept json
 // @Produce json
@@ -141,8 +131,8 @@ func (h *UserHandler) GetUserByID(c *gin.Context) {
 }
 
 // GetUserByEmail godoc
-// @Summary Busca um usuário por email
-// @Description Retorna os dados de um usuário específico pelo email
+// @Summary Retrieves a user by email
+// @Description Returns the data of a specific user by email
 // @Tags users
 // @Accept json
 // @Produce json
@@ -185,4 +175,35 @@ func (h *UserHandler) GetUserByEmail(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, user)
+}
+
+// ListAllUsers godoc
+// @Summary Lists all users (Admin only)
+// @Description Returns a list of all users in the system
+// @Tags users
+// @Accept json
+// @Produce json
+// @Security BearerAuth
+// @Success 200 {array} models.UserResponse
+// @Failure 401 {object} ErrorResponse
+// @Failure 403 {object} ErrorResponse
+// @Failure 500 {object} ErrorResponse
+// @Router /admin/users [get]
+func (h *UserHandler) ListAllUsers(c *gin.Context) {
+	ctx := c.Request.Context()
+
+	log.Info(ctx, "Listing all users")
+
+	users, err := h.userService.ListAllUsers(ctx)
+	if err != nil {
+		log.Error(ctx, "Failed to list all users", zap.Error(err))
+		c.JSON(http.StatusInternalServerError, ErrorResponse{
+			Error:   "internal_error",
+			Message: "Failed to list users",
+		})
+		return
+	}
+
+	log.Info(ctx, "Successfully listed all users", zap.Int("count", len(users)))
+	c.JSON(http.StatusOK, users)
 }

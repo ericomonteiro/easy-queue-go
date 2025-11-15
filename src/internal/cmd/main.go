@@ -9,7 +9,6 @@ import (
 	"easy-queue-go/src/internal/repositories"
 	"easy-queue-go/src/internal/routes"
 	"easy-queue-go/src/internal/services"
-	"easy-queue-go/src/internal/singletons"
 	"easy-queue-go/src/internal/tracing"
 
 	"go.uber.org/zap"
@@ -43,30 +42,36 @@ func main() {
 		)
 	}
 
-	// Initialize singletons (DB, configs, etc)
-	instances := singletons.Initialize(ctx)
+	// Load configs
+	log.Info(ctx, "Loading configs")
+	configs := config.InitializeConfigs()
+
+	// Initialize database
+	dbClient, err := database.NewClient(ctx, configs.DB)
+	if err != nil {
+		log.Panic(ctx, "Failed to connect to database", zap.Error(err))
+	}
 
 	// Get database pool
-	dbClient, ok := instances.DB.(*database.Client)
+	client, ok := dbClient.(*database.Client)
 	if !ok {
 		log.Fatal(ctx, "Failed to cast database client")
 	}
-	pool := dbClient.Pool()
-
-	// Get configs
-	configs := instances.Configs
+	pool := client.Pool()
 
 	// Initialize dependencies
 	userRepo := repositories.NewUserRepository(pool)
 	userService := services.NewUserService(userRepo)
 	userHandler := handlers.NewUserHandler(userService)
 
-	// Initialize auth service and handler
+	// Initialize auth service
 	authService := services.NewAuthService(userRepo, services.AuthServiceConfig{
 		JWTSecret:       configs.JWT.Secret,
 		AccessTokenTTL:  configs.JWT.AccessTokenTTL,
 		RefreshTokenTTL: configs.JWT.RefreshTokenTTL,
 	})
+
+	// Initialize auth handler
 	authHandler := handlers.NewAuthHandler(authService)
 
 	// Setup router

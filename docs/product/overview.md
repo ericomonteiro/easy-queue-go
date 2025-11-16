@@ -52,18 +52,20 @@ This approach provides a more predictable, efficient, and user-friendly waiting 
 ### 👤 Customer (CU)
 - Join a virtual queue or schedule an appointment
 - View estimated wait time
-- Receive notifications for optimal travel time
+- Receive **WhatsApp notifications** for optimal travel time
 - Perform **location-based check-in**
 - Cancel or reschedule reservations
 - Track personal reputation and history
+- Communicate with businesses via WhatsApp
 
 ### 🏢 Business Owner (BO)
 - Register services and define average wait times
 - Set **minimum distance** and **check-in tolerance** rules
 - Manage live queue dashboard
-- Receive real-time alerts for check-ins or no-shows
+- Receive **real-time WhatsApp alerts** for check-ins or no-shows
 - Monitor key metrics: attendance, delays, and averages
 - Review customer reputation and reliability
+- Send automated messages to customers via WhatsApp
 
 ---
 
@@ -72,13 +74,13 @@ This approach provides a more predictable, efficient, and user-friendly waiting 
 **Maria**, a customer, schedules a haircut at *Beleza Pura Salon*.  
 She joins the digital queue and sees her position: "You are 3rd in line."
 
-When the system estimates her service will start in 25 minutes, EasyQueue sends a notification:
+When the system estimates her service will start in 25 minutes, EasyQueue sends a **WhatsApp notification**:
 > "Hi Maria, your turn is coming! You are about 10 minutes away — it's time to start heading to the salon."
 
 Once Maria is **2 km from the location**, she can perform a **check-in**, confirming her presence.  
-The salon receives a real-time update, keeping the queue accurate and flowing.
+The salon receives a **real-time WhatsApp alert**, keeping the queue accurate and flowing.
 
-Maria arrives at the right time, receives her service without waiting, and rates her experience — while the business maintains full control of flow and punctuality.
+Maria arrives at the right time, receives her service without waiting, and rates her experience — while the business maintains full control of flow and punctuality through automated WhatsApp communications.
 
 ---
 
@@ -133,20 +135,28 @@ This creates a **hybrid system** — more flexible than a rigid appointment sche
 - ✅ Project base structure
 - ✅ PostgreSQL database connection
 - ✅ Database schema
-- 🔄 Basic REST API
-- 🔄 Authentication system
+- ✅ Basic REST API
+- ✅ Authentication system
+- ✅ User management
+- ✅ Multi-role support (Business Owner & Customer)
+- ✅ WhatsApp Business API integration
+- 🔄 Queue management
 
 ### Phase 2: Core Features
 - 📋 Queue management
 - 📍 Geolocation check-in
-- 🔔 Notification system
+- 🔔 Notification system (WhatsApp-based)
 - ⭐ Reputation system
+- 💬 WhatsApp webhook processing
+- 📨 Automated customer notifications
 
 ### Phase 3: Enhancements
 - 📊 Analytics dashboard
 - 📱 Mobile application
 - 🤖 AI-powered estimates
 - 🌐 Multi-language
+- 📧 Email notifications
+- 📱 SMS notifications
 
 ---
 
@@ -159,3 +169,5 @@ This creates a **hybrid system** — more flexible than a rigid appointment sche
 - [Database Schema](../database/schema.md)
 - [Quick Start Guide](../getting-started.md)
 - [Project Structure](../project-structure.md)
+- [WhatsApp Integration](../whatsapp-integration.md)
+- [Authentication & Authorization](../features/authentication.md)

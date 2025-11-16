@@ -1,0 +1,123 @@
+{
+  "examples": [
+    {
+      "name": "Simple Template (No Parameters)",
+      "description": "Send a template without any dynamic parameters",
+      "endpoint": "POST /debug/whatsapp/send-template",
+      "request": {
+        "to": "5511999999999",
+        "template": {
+          "name": "hello_world",
+          "language": "en_US"
+        }
+      }
+    },
+    {
+      "name": "Template with Body Parameters",
+      "description": "Send a template with dynamic text in the body",
+      "endpoint": "POST /debug/whatsapp/send-template",
+      "request": {
+        "to": "5511999999999",
+        "template": {
+          "name": "order_confirmation",
+          "language": "pt_BR",
+          "components": [
+            {
+              "type": "body",
+              "parameters": [
+                {
+                  "type": "text",
+                  "text": "João Silva"
+                },
+                {
+                  "type": "text",
+                  "text": "12345"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Template with Header and Body",
+      "description": "Send a template with dynamic header and body parameters",
+      "endpoint": "POST /debug/whatsapp/send-template",
+      "request": {
+        "to": "5511999999999",
+        "template": {
+          "name": "appointment_reminder",
+          "language": "pt_BR",
+          "components": [
+            {
+              "type": "header",
+              "parameters": [
+                {
+                  "type": "text",
+                  "text": "Consulta Médica"
+                }
+              ]
+            },
+            {
+              "type": "body",
+              "parameters": [
+                {
+                  "type": "text",
+                  "text": "João Silva"
+                },
+                {
+                  "type": "text",
+                  "text": "15/01/2024"
+                },
+                {
+                  "type": "text",
+                  "text": "14:30"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Using Advanced Send Endpoint",
+      "description": "Send template using the generic send endpoint",
+      "endpoint": "POST /debug/whatsapp/send",
+      "request": {
+        "to": "5511999999999",
+        "type": "template",
+        "template": {
+          "name": "welcome_message",
+          "language": "pt_BR",
+          "components": [
+            {
+              "type": "body",
+              "parameters": [
+                {
+                  "type": "text",
+                  "text": "Maria"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "common_language_codes": {
+    "Portuguese (Brazil)": "pt_BR",
+    "English (US)": "en_US",
+    "Spanish (Spain)": "es_ES",
+    "Spanish (Mexico)": "es_MX",
+    "French": "fr",
+    "German": "de",
+    "Italian": "it"
+  },
+  "notes": [
+    "Templates must be created and approved in Meta Business Manager before use",
+    "Template names must be lowercase with underscores only",
+    "Parameters are indexed starting from {{1}}, not {{0}}",
+    "The order of parameters in the API call must match the template definition",
+    "Template approval usually takes 24-48 hours"
+  ]
+}

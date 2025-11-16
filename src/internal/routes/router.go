@@ -19,6 +19,7 @@ func SetupRouter(
 	userHandler *handlers.UserHandler,
 	authHandler *handlers.AuthHandler,
 	businessHandler *handlers.BusinessHandler,
+	whatsappHandler *handlers.WhatsAppHandler,
 	authService services.AuthService,
 ) *gin.Engine {
 	router := gin.Default()
@@ -44,6 +45,13 @@ func SetupRouter(
 
 	// User registration (public)
 	router.POST("/users", userHandler.CreateUser)
+
+	// WhatsApp webhook routes (public - called by Meta)
+	whatsappGroup := router.Group("/whatsapp")
+	{
+		whatsappGroup.GET("/webhook", whatsappHandler.VerifyWebhook)
+		whatsappGroup.POST("/webhook", whatsappHandler.ReceiveWebhook)
+	}
 
 	// Protected routes - require authentication
 	protected := router.Group("")
@@ -72,6 +80,17 @@ func SetupRouter(
 		{
 			adminGroup.GET("/users", userHandler.ListAllUsers)
 			adminGroup.GET("/businesses", businessHandler.ListAllBusinesses)
+		}
+
+		// Debug routes (authenticated users - for testing)
+		debugGroup := protected.Group("/debug")
+		debugGroup.Use(middleware.RequireRole(models.RoleAdmin))
+		{
+			// WhatsApp debug endpoints
+			debugGroup.GET("/whatsapp/status", whatsappHandler.GetStatus)
+			debugGroup.POST("/whatsapp/send", whatsappHandler.SendMessage)
+			debugGroup.POST("/whatsapp/send-text", whatsappHandler.SendTextMessage)
+			debugGroup.POST("/whatsapp/send-template", whatsappHandler.SendTemplateMessage)
 		}
 	}
 

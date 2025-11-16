@@ -67,16 +67,37 @@ Copy the example file:
 cp .env.example .env
 ```
 
-Edit the `.env` file if needed:
+Edit the `.env` file with your configuration:
 
 ```env
+# Database Configuration
 DB_HOST=localhost
 DB_PORT=5432
 DB_USER=easyqueue
 DB_PASSWORD=easyqueue123
 DB_NAME=easyqueue
 DB_SSLMODE=disable
+
+# JWT Configuration
+JWT_SECRET=your-super-secret-jwt-key-change-this-in-production
+JWT_ACCESS_TOKEN_TTL=15m
+JWT_REFRESH_TOKEN_TTL=7d
+
+# WhatsApp Configuration (Optional - for messaging features)
+# Get these values from Meta for Developers: https://developers.facebook.com
+WHATSAPP_ACCESS_TOKEN=your-whatsapp-access-token
+WHATSAPP_PHONE_NUMBER_ID=your-phone-number-id
+WHATSAPP_BUSINESS_ID=your-business-account-id
+WHATSAPP_WEBHOOK_TOKEN=your-custom-webhook-verify-token
+WHATSAPP_API_VERSION=v22.0
+WHATSAPP_API_URL=https://graph.facebook.com
+
+# Optional: For automatic token refresh
+WHATSAPP_APP_ID=your-app-id
+WHATSAPP_APP_SECRET=your-app-secret
 ```
+
+> **Note:** WhatsApp configuration is optional. If you want to enable WhatsApp messaging features, see the [WhatsApp Integration Guide](whatsapp-integration.md) for detailed setup instructions.
 
 ### 4. Install Dependencies
 
@@ -180,7 +201,9 @@ Now that you have EasyQueue running:
 - 📖 Explore the [Project Structure](project-structure.md)
 - 🗄️ See the [Database Schema](database/schema.md)
 - 🎯 Understand the [Product Vision](product/overview.md)
-- 🔧 Configure the [API](api/endpoints.md)
+- 💬 Set up [WhatsApp Integration](whatsapp-integration.md) for messaging features
+- 🔐 Learn about [Authentication & Authorization](features/authentication.md)
+- 📚 View the [API Documentation](api/swagger-ui.md)
 
 ## 💡 Development Tips
 

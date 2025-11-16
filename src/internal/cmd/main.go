@@ -98,8 +98,22 @@ func main() {
 	// Initialize auth handler
 	authHandler := handlers.NewAuthHandler(authService)
 
+	// Initialize WhatsApp service and handler
+	var whatsappHandler *handlers.WhatsAppHandler
+	if configs.WhatsApp != nil {
+		whatsappService := services.NewWhatsAppService(configs.WhatsApp)
+		whatsappHandler = handlers.NewWhatsAppHandler(whatsappService)
+		log.Info(ctx, "WhatsApp integration initialized",
+			zap.String("phone_number_id", configs.WhatsApp.PhoneNumberID),
+		)
+	} else {
+		log.Warn(ctx, "WhatsApp integration not configured - WhatsApp features will be disabled")
+		// Create a dummy handler to avoid nil pointer issues
+		whatsappHandler = handlers.NewWhatsAppHandler(nil)
+	}
+
 	// Setup router
-	router := routes.SetupRouter(tracingConfig.ServiceName, userHandler, authHandler, businessHandler, authService)
+	router := routes.SetupRouter(tracingConfig.ServiceName, userHandler, authHandler, businessHandler, whatsappHandler, authService)
 
 	// Start server
 	log.Info(ctx, "Starting server on port 8080")

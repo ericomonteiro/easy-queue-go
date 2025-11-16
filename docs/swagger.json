@@ -540,6 +540,235 @@
                 }
             }
         },
+        "/debug/whatsapp/send": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Sends a WhatsApp message to a phone number. This is a debug endpoint for testing.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "whatsapp-debug"
+                ],
+                "summary": "Send a WhatsApp message (Debug)",
+                "parameters": [
+                    {
+                        "description": "Message data",
+                        "name": "message",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/easy-queue-go_src_internal_models.SendWhatsAppMessageRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/easy-queue-go_src_internal_models.WhatsAppMessageResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/src_internal_handlers.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/src_internal_handlers.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/src_internal_handlers.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/debug/whatsapp/send-template": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Sends a template message via WhatsApp. Templates must be pre-approved by Meta.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "whatsapp-debug"
+                ],
+                "summary": "Send a template message (Debug)",
+                "parameters": [
+                    {
+                        "description": "Phone number and template",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "template": {
+                                    "$ref": "#/definitions/easy-queue-go_src_internal_models.WhatsAppTemplateRequest"
+                                },
+                                "to": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/easy-queue-go_src_internal_models.WhatsAppMessageResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/src_internal_handlers.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/src_internal_handlers.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/src_internal_handlers.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/debug/whatsapp/send-text": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Sends a simple text message via WhatsApp. This is a debug endpoint for quick testing.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "whatsapp-debug"
+                ],
+                "summary": "Send a simple text message (Debug)",
+                "parameters": [
+                    {
+                        "description": "Phone number and message",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "message": {
+                                    "type": "string"
+                                },
+                                "to": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/easy-queue-go_src_internal_models.WhatsAppMessageResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/src_internal_handlers.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/src_internal_handlers.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/src_internal_handlers.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/debug/whatsapp/status": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Returns the status of the WhatsApp integration",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "whatsapp-debug"
+                ],
+                "summary": "Get WhatsApp integration status (Debug)",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "configured": {
+                                    "type": "boolean"
+                                },
+                                "status": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/src_internal_handlers.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/health": {
             "get": {
                 "description": "Returns the health status of the application",
@@ -648,6 +877,107 @@
                     },
                     "404": {
                         "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/src_internal_handlers.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/src_internal_handlers.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/whatsapp/webhook": {
+            "get": {
+                "description": "Verifies the webhook subscription from WhatsApp (called by Meta)",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "text/plain"
+                ],
+                "tags": [
+                    "whatsapp"
+                ],
+                "summary": "Verify WhatsApp webhook",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Subscription mode",
+                        "name": "hub.mode",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Verify token",
+                        "name": "hub.verify_token",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Challenge string",
+                        "name": "hub.challenge",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Challenge string",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/src_internal_handlers.ErrorResponse"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Receives webhook events from WhatsApp (called by Meta when messages are received)",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "whatsapp"
+                ],
+                "summary": "Receive WhatsApp webhook events",
+                "parameters": [
+                    {
+                        "description": "Webhook payload",
+                        "name": "payload",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/easy-queue-go_src_internal_models.WhatsAppWebhookPayload"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "status": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
                         "schema": {
                             "$ref": "#/definitions/src_internal_handlers.ErrorResponse"
                         }
@@ -820,8 +1150,43 @@
                 }
             }
         },
+        "easy-queue-go_src_internal_models.SendWhatsAppMessageRequest": {
+            "type": "object",
+            "required": [
+                "to",
+                "type"
+            ],
+            "properties": {
+                "message": {
+                    "type": "string"
+                },
+                "template": {
+                    "$ref": "#/definitions/easy-queue-go_src_internal_models.WhatsAppTemplateRequest"
+                },
+                "to": {
+                    "type": "string"
+                },
+                "type": {
+                    "enum": [
+                        "text",
+                        "template",
+                        "image",
+                        "document"
+                    ],
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/easy-queue-go_src_internal_models.WhatsAppMessageType"
+                        }
+                    ]
+                }
+            }
+        },
         "easy-queue-go_src_internal_models.UpdateBusinessRequest": {
             "type": "object",
+            "required": [
+                "name",
+                "phone"
+            ],
             "properties": {
                 "address": {
                     "type": "string",
@@ -890,6 +1255,205 @@
                 "RoleCustomer",
                 "RoleAdmin"
             ]
+        },
+        "easy-queue-go_src_internal_models.WhatsAppMessageResponse": {
+            "type": "object",
+            "properties": {
+                "error": {
+                    "type": "string"
+                },
+                "message_id": {
+                    "type": "string"
+                },
+                "sent_at": {
+                    "type": "string"
+                },
+                "success": {
+                    "type": "boolean"
+                },
+                "to": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                }
+            }
+        },
+        "easy-queue-go_src_internal_models.WhatsAppMessageType": {
+            "type": "string",
+            "enum": [
+                "text",
+                "template",
+                "image",
+                "document"
+            ],
+            "x-enum-varnames": [
+                "WhatsAppMessageTypeText",
+                "WhatsAppMessageTypeTemplate",
+                "WhatsAppMessageTypeImage",
+                "WhatsAppMessageTypeDocument"
+            ]
+        },
+        "easy-queue-go_src_internal_models.WhatsAppTemplateComponent": {
+            "type": "object",
+            "required": [
+                "type"
+            ],
+            "properties": {
+                "parameters": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/easy-queue-go_src_internal_models.WhatsAppTemplateParameter"
+                    }
+                },
+                "type": {
+                    "type": "string",
+                    "enum": [
+                        "header",
+                        "body",
+                        "button"
+                    ]
+                }
+            }
+        },
+        "easy-queue-go_src_internal_models.WhatsAppTemplateParameter": {
+            "type": "object",
+            "required": [
+                "type"
+            ],
+            "properties": {
+                "text": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string",
+                    "enum": [
+                        "text",
+                        "currency",
+                        "date_time",
+                        "image",
+                        "document",
+                        "video"
+                    ]
+                }
+            }
+        },
+        "easy-queue-go_src_internal_models.WhatsAppTemplateRequest": {
+            "type": "object",
+            "required": [
+                "language",
+                "name"
+            ],
+            "properties": {
+                "components": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/easy-queue-go_src_internal_models.WhatsAppTemplateComponent"
+                    }
+                },
+                "language": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "easy-queue-go_src_internal_models.WhatsAppWebhookPayload": {
+            "type": "object",
+            "properties": {
+                "entry": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "changes": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "properties": {
+                                        "field": {
+                                            "type": "string"
+                                        },
+                                        "value": {
+                                            "type": "object",
+                                            "properties": {
+                                                "contacts": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "object",
+                                                        "properties": {
+                                                            "profile": {
+                                                                "type": "object",
+                                                                "properties": {
+                                                                    "name": {
+                                                                        "type": "string"
+                                                                    }
+                                                                }
+                                                            },
+                                                            "wa_id": {
+                                                                "type": "string"
+                                                            }
+                                                        }
+                                                    }
+                                                },
+                                                "messages": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "object",
+                                                        "properties": {
+                                                            "from": {
+                                                                "type": "string"
+                                                            },
+                                                            "id": {
+                                                                "type": "string"
+                                                            },
+                                                            "text": {
+                                                                "type": "object",
+                                                                "properties": {
+                                                                    "body": {
+                                                                        "type": "string"
+                                                                    }
+                                                                }
+                                                            },
+                                                            "timestamp": {
+                                                                "type": "string"
+                                                            },
+                                                            "type": {
+                                                                "type": "string"
+                                                            }
+                                                        }
+                                                    }
+                                                },
+                                                "messaging_product": {
+                                                    "type": "string"
+                                                },
+                                                "metadata": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "display_phone_number": {
+                                                            "type": "string"
+                                                        },
+                                                        "phone_number_id": {
+                                                            "type": "string"
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            "id": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                },
+                "object": {
+                    "type": "string"
+                }
+            }
         },
         "src_internal_handlers.ErrorResponse": {
             "type": "object",

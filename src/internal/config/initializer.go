@@ -6,8 +6,9 @@ import (
 )
 
 type Configs struct {
-	DB  *DBConfig
-	JWT *JWTConfig
+	DB       *DBConfig
+	JWT      *JWTConfig
+	WhatsApp *WhatsAppConfig
 }
 
 // InitializeConfigs initializes the configs
@@ -19,9 +20,15 @@ func InitializeConfigs() *Configs {
 		log.Fatalf("Failed to load JWT config: %v", err)
 	}
 
+	whatsappConfig, err := LoadWhatsAppConfig()
+	if err != nil {
+		log.Printf("Warning: Failed to load WhatsApp config: %v (WhatsApp features will be disabled)", err)
+	}
+
 	return &Configs{
-		DB:  dbConfigs,
-		JWT: jwtConfig,
+		DB:       dbConfigs,
+		JWT:      jwtConfig,
+		WhatsApp: whatsappConfig,
 	}
 }
 

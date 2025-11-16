@@ -107,6 +107,26 @@ definitions:
       token_type:
         type: string
     type: object
+  easy-queue-go_src_internal_models.SendWhatsAppMessageRequest:
+    properties:
+      message:
+        type: string
+      template:
+        $ref: '#/definitions/easy-queue-go_src_internal_models.WhatsAppTemplateRequest'
+      to:
+        type: string
+      type:
+        allOf:
+        - $ref: '#/definitions/easy-queue-go_src_internal_models.WhatsAppMessageType'
+        enum:
+        - text
+        - template
+        - image
+        - document
+    required:
+    - to
+    - type
+    type: object
   easy-queue-go_src_internal_models.UpdateBusinessRequest:
     properties:
       address:
@@ -127,6 +147,9 @@ definitions:
         maxLength: 50
         minLength: 10
         type: string
+    required:
+    - name
+    - phone
     type: object
   easy-queue-go_src_internal_models.UserResponse:
     properties:
@@ -157,6 +180,139 @@ definitions:
     - RoleBusinessOwner
     - RoleCustomer
     - RoleAdmin
+  easy-queue-go_src_internal_models.WhatsAppMessageResponse:
+    properties:
+      error:
+        type: string
+      message_id:
+        type: string
+      sent_at:
+        type: string
+      success:
+        type: boolean
+      to:
+        type: string
+      type:
+        type: string
+    type: object
+  easy-queue-go_src_internal_models.WhatsAppMessageType:
+    enum:
+    - text
+    - template
+    - image
+    - document
+    type: string
+    x-enum-varnames:
+    - WhatsAppMessageTypeText
+    - WhatsAppMessageTypeTemplate
+    - WhatsAppMessageTypeImage
+    - WhatsAppMessageTypeDocument
+  easy-queue-go_src_internal_models.WhatsAppTemplateComponent:
+    properties:
+      parameters:
+        items:
+          $ref: '#/definitions/easy-queue-go_src_internal_models.WhatsAppTemplateParameter'
+        type: array
+      type:
+        enum:
+        - header
+        - body
+        - button
+        type: string
+    required:
+    - type
+    type: object
+  easy-queue-go_src_internal_models.WhatsAppTemplateParameter:
+    properties:
+      text:
+        type: string
+      type:
+        enum:
+        - text
+        - currency
+        - date_time
+        - image
+        - document
+        - video
+        type: string
+    required:
+    - type
+    type: object
+  easy-queue-go_src_internal_models.WhatsAppTemplateRequest:
+    properties:
+      components:
+        items:
+          $ref: '#/definitions/easy-queue-go_src_internal_models.WhatsAppTemplateComponent'
+        type: array
+      language:
+        type: string
+      name:
+        type: string
+    required:
+    - language
+    - name
+    type: object
+  easy-queue-go_src_internal_models.WhatsAppWebhookPayload:
+    properties:
+      entry:
+        items:
+          properties:
+            changes:
+              items:
+                properties:
+                  field:
+                    type: string
+                  value:
+                    properties:
+                      contacts:
+                        items:
+                          properties:
+                            profile:
+                              properties:
+                                name:
+                                  type: string
+                              type: object
+                            wa_id:
+                              type: string
+                          type: object
+                        type: array
+                      messages:
+                        items:
+                          properties:
+                            from:
+                              type: string
+                            id:
+                              type: string
+                            text:
+                              properties:
+                                body:
+                                  type: string
+                              type: object
+                            timestamp:
+                              type: string
+                            type:
+                              type: string
+                          type: object
+                        type: array
+                      messaging_product:
+                        type: string
+                      metadata:
+                        properties:
+                          display_phone_number:
+                            type: string
+                          phone_number_id:
+                            type: string
+                        type: object
+                    type: object
+                type: object
+              type: array
+            id:
+              type: string
+          type: object
+        type: array
+      object:
+        type: string
+    type: object
   src_internal_handlers.ErrorResponse:
     properties:
       error:
@@ -522,6 +678,153 @@ paths:
       summary: Retrieves all businesses owned by the authenticated user
       tags:
       - businesses
+  /debug/whatsapp/send:
+    post:
+      consumes:
+      - application/json
+      description: Sends a WhatsApp message to a phone number. This is a debug endpoint
+        for testing.
+      parameters:
+      - description: Message data
+        in: body
+        name: message
+        required: true
+        schema:
+          $ref: '#/definitions/easy-queue-go_src_internal_models.SendWhatsAppMessageRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/easy-queue-go_src_internal_models.WhatsAppMessageResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/src_internal_handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/src_internal_handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/src_internal_handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Send a WhatsApp message (Debug)
+      tags:
+      - whatsapp-debug
+  /debug/whatsapp/send-template:
+    post:
+      consumes:
+      - application/json
+      description: Sends a template message via WhatsApp. Templates must be pre-approved
+        by Meta.
+      parameters:
+      - description: Phone number and template
+        in: body
+        name: request
+        required: true
+        schema:
+          properties:
+            template:
+              $ref: '#/definitions/easy-queue-go_src_internal_models.WhatsAppTemplateRequest'
+            to:
+              type: string
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/easy-queue-go_src_internal_models.WhatsAppMessageResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/src_internal_handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/src_internal_handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/src_internal_handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Send a template message (Debug)
+      tags:
+      - whatsapp-debug
+  /debug/whatsapp/send-text:
+    post:
+      consumes:
+      - application/json
+      description: Sends a simple text message via WhatsApp. This is a debug endpoint
+        for quick testing.
+      parameters:
+      - description: Phone number and message
+        in: body
+        name: request
+        required: true
+        schema:
+          properties:
+            message:
+              type: string
+            to:
+              type: string
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/easy-queue-go_src_internal_models.WhatsAppMessageResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/src_internal_handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/src_internal_handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/src_internal_handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Send a simple text message (Debug)
+      tags:
+      - whatsapp-debug
+  /debug/whatsapp/status:
+    get:
+      consumes:
+      - application/json
+      description: Returns the status of the WhatsApp integration
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            properties:
+              configured:
+                type: boolean
+              status:
+                type: string
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/src_internal_handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Get WhatsApp integration status (Debug)
+      tags:
+      - whatsapp-debug
   /health:
     get:
       consumes:
@@ -601,6 +904,74 @@ paths:
       summary: Retrieves the authenticated user's profile
       tags:
       - users
+  /whatsapp/webhook:
+    get:
+      consumes:
+      - application/json
+      description: Verifies the webhook subscription from WhatsApp (called by Meta)
+      parameters:
+      - description: Subscription mode
+        in: query
+        name: hub.mode
+        required: true
+        type: string
+      - description: Verify token
+        in: query
+        name: hub.verify_token
+        required: true
+        type: string
+      - description: Challenge string
+        in: query
+        name: hub.challenge
+        required: true
+        type: string
+      produces:
+      - text/plain
+      responses:
+        "200":
+          description: Challenge string
+          schema:
+            type: string
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/src_internal_handlers.ErrorResponse'
+      summary: Verify WhatsApp webhook
+      tags:
+      - whatsapp
+    post:
+      consumes:
+      - application/json
+      description: Receives webhook events from WhatsApp (called by Meta when messages
+        are received)
+      parameters:
+      - description: Webhook payload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/easy-queue-go_src_internal_models.WhatsAppWebhookPayload'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            properties:
+              status:
+                type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/src_internal_handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/src_internal_handlers.ErrorResponse'
+      summary: Receive WhatsApp webhook events
+      tags:
+      - whatsapp
 securityDefinitions:
   BearerAuth:
     description: Type "Bearer" followed by a space and JWT token.

@@ -120,6 +120,28 @@ PostgreSQL client with advanced features:
 - **Pool statistics** for monitoring connection usage
 - **Graceful shutdown** handling
 
+### 💬 WhatsApp Integration
+
+WhatsApp Business API integration for customer communication:
+- **Send text messages** to customers
+- **Template messages** with dynamic parameters (pre-approved by Meta)
+- **Webhook support** for receiving incoming messages
+- **Automatic token management** with refresh capabilities
+- **Debug endpoints** for testing and development
+- **Production-ready** with System User tokens
+
+Quick start:
+```bash
+# Configure WhatsApp credentials in .env
+WHATSAPP_ACCESS_TOKEN=your-token
+WHATSAPP_PHONE_NUMBER_ID=your-phone-id
+
+# Start the server
+go run src/internal/cmd/main.go
+```
+
+📖 See [docs/whatsapp-integration.md](docs/whatsapp-integration.md) for complete integration guide and [docs/whatsapp-token-management.md](docs/whatsapp-token-management.md) for token management best practices.
+
 ### 🔍 Distributed Tracing
 
 OpenTelemetry integration with Jaeger:
@@ -165,10 +187,25 @@ make swagger-generate
 
 ## API Endpoints
 
+### Core Endpoints
+
 | Method | Endpoint | Description |
 |--------|----------|-------------|
 | GET    | `/health` | Health check endpoint |
 | GET    | `/swagger/*any` | Swagger UI documentation |
+
+### WhatsApp Integration Endpoints
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET    | `/debug/whatsapp/status` | Check WhatsApp integration status |
+| POST   | `/debug/whatsapp/send-text` | Send text message (simple) |
+| POST   | `/debug/whatsapp/send` | Send message (advanced) |
+| POST   | `/debug/whatsapp/send-template` | Send template message |
+| GET    | `/whatsapp/webhook` | Webhook verification |
+| POST   | `/whatsapp/webhook` | Receive incoming messages |
+
+📖 See [WhatsApp Integration Guide](docs/whatsapp-integration.md) for detailed API documentation and examples.
 
 ## Development
 
@@ -236,14 +273,20 @@ docker-compose down -v
 ## Documentation
 
 ### Quick Start Guides
+- 📖 [Getting Started](docs/getting-started.md) - Complete setup guide
 - 📖 [Swagger Quick Start](SWAGGER_QUICKSTART.md) - Quick guide to API documentation
 - 📖 [Viewing Documentation](docs/VIEWING_DOCS.md) - How to view the documentation site locally
+
+### Integration Guides
+- 💬 [WhatsApp Integration](docs/whatsapp-integration.md) - Complete WhatsApp Business API integration guide
+- 🔑 [WhatsApp Token Management](docs/whatsapp-token-management.md) - Token management and best practices
 
 ### Detailed Documentation
 - 📖 [Project Structure](docs/project-structure.md) - Detailed architecture and code organization
 - 📖 [Swagger Documentation](docs/api/swagger.md) - API documentation with Swagger/OpenAPI
 - 📖 [Database Schema](docs/database/schema.md) - Database design and migrations
 - 📖 [Product Overview](docs/product/overview.md) - Product vision and features
+- 🔐 [Authentication & Authorization](docs/features/authentication.md) - JWT-based authentication system
 
 ## Contributing
 

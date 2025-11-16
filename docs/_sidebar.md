@@ -16,6 +16,10 @@
   * [🔐 Authentication & Authorization](features/authentication.md)
   * [👥 Multi-Role Support](features/multi-role-support.md)
 
+* **WhatsApp Integration**
+  * [💬 Integration Guide](whatsapp-integration.md)
+  * [🔑 Token Management](whatsapp-token-management.md)
+
 * **API**
   * [📚 Swagger UI](api/swagger-ui.md)
   * [👥 Users API](api/users.md)

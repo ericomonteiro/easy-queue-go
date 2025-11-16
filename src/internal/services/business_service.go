@@ -6,7 +6,6 @@ import (
 	"easy-queue-go/src/internal/models"
 	"easy-queue-go/src/internal/repositories"
 	"fmt"
-	"time"
 
 	"github.com/google/uuid"
 	"go.opentelemetry.io/otel"
@@ -76,19 +75,7 @@ func (s *businessService) CreateBusiness(ctx context.Context, ownerID uuid.UUID,
 	}
 
 	// Create the business
-	now := time.Now()
-	business := &models.Business{
-		ID:          uuid.New(),
-		OwnerID:     ownerID,
-		Name:        req.Name,
-		Description: req.Description,
-		Address:     req.Address,
-		Phone:       req.Phone,
-		Email:       req.Email,
-		IsActive:    true,
-		CreatedAt:   now,
-		UpdatedAt:   now,
-	}
+	business := req.ToBusiness(ownerID)
 
 	// Save to database
 	if err := s.businessRepo.Create(ctx, business); err != nil {
@@ -232,26 +219,7 @@ func (s *businessService) UpdateBusiness(ctx context.Context, id uuid.UUID, owne
 		return nil, fmt.Errorf("you are not authorized to update this business")
 	}
 
-	// Update fields if provided
-	if req.Name != "" {
-		business.Name = req.Name
-	}
-	if req.Description != "" {
-		business.Description = req.Description
-	}
-	if req.Address != "" {
-		business.Address = req.Address
-	}
-	if req.Phone != "" {
-		business.Phone = req.Phone
-	}
-	if req.Email != "" {
-		business.Email = req.Email
-	}
-	if req.IsActive != nil {
-		business.IsActive = *req.IsActive
-	}
-	business.UpdatedAt = time.Now()
+	business.ApplyUpdateRequest(req)
 
 	// Save to database
 	if err := s.businessRepo.Update(ctx, business); err != nil {

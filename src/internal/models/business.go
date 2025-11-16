@@ -31,12 +31,12 @@ type CreateBusinessRequest struct {
 
 // UpdateBusinessRequest represents the request to update a business
 type UpdateBusinessRequest struct {
-	Name        string `json:"name" binding:"omitempty,min=3,max=255"`
-	Description string `json:"description" binding:"omitempty,max=1000"`
-	Address     string `json:"address" binding:"omitempty,max=500"`
-	Phone       string `json:"phone" binding:"omitempty,min=10,max=50"`
+	Name        string `json:"name" binding:"required,min=3,max=255"`
+	Description string `json:"description" binding:"max=1000"`
+	Address     string `json:"address" binding:"max=500"`
+	Phone       string `json:"phone" binding:"required,min=10,max=50"`
 	Email       string `json:"email" binding:"omitempty,email"`
-	IsActive    *bool  `json:"is_active" binding:"omitempty"`
+	IsActive    *bool  `json:"is_active"`
 }
 
 // BusinessResponse represents the response with business data
@@ -67,4 +67,34 @@ func (b *Business) ToResponse() *BusinessResponse {
 		CreatedAt:   b.CreatedAt,
 		UpdatedAt:   b.UpdatedAt,
 	}
+}
+
+// FromCreateRequest converts CreateBusinessRequest to Business
+func (req *CreateBusinessRequest) ToBusiness(ownerID uuid.UUID) *Business {
+	now := time.Now()
+	return &Business{
+		ID:          uuid.New(),
+		OwnerID:     ownerID,
+		Name:        req.Name,
+		Description: req.Description,
+		Address:     req.Address,
+		Phone:       req.Phone,
+		Email:       req.Email,
+		IsActive:    true,
+		CreatedAt:   now,
+		UpdatedAt:   now,
+	}
+}
+
+// ApplyUpdateRequest applies UpdateBusinessRequest to an existing Business
+func (b *Business) ApplyUpdateRequest(req *UpdateBusinessRequest) {
+	b.Name = req.Name
+	b.Description = req.Description
+	b.Address = req.Address
+	b.Phone = req.Phone
+	b.Email = req.Email
+	if req.IsActive != nil {
+		b.IsActive = *req.IsActive
+	}
+	b.UpdatedAt = time.Now()
 }

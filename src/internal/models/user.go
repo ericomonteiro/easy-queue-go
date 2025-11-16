@@ -68,3 +68,18 @@ func (u *User) ToResponse() *UserResponse {
 		UpdatedAt: u.UpdatedAt,
 	}
 }
+
+// ToUser converts CreateUserRequest to User (without password hash)
+func (req *CreateUserRequest) ToUser(passwordHash string) *User {
+	now := time.Now()
+	return &User{
+		ID:           uuid.New(),
+		Email:        req.Email,
+		PasswordHash: passwordHash,
+		Phone:        req.Phone,
+		Roles:        req.Roles,
+		IsActive:     true,
+		CreatedAt:    now,
+		UpdatedAt:    now,
+	}
+}

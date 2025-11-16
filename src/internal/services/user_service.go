@@ -6,7 +6,6 @@ import (
 	"easy-queue-go/src/internal/models"
 	"easy-queue-go/src/internal/repositories"
 	"fmt"
-	"time"
 
 	"github.com/google/uuid"
 	"go.opentelemetry.io/otel"
@@ -70,17 +69,7 @@ func (s *userService) CreateUser(ctx context.Context, req *models.CreateUserRequ
 	}
 
 	// Create the user
-	now := time.Now()
-	user := &models.User{
-		ID:           uuid.New(),
-		Email:        req.Email,
-		PasswordHash: hashedPassword,
-		Phone:        req.Phone,
-		Roles:        req.Roles,
-		IsActive:     true,
-		CreatedAt:    now,
-		UpdatedAt:    now,
-	}
+	user := req.ToUser(hashedPassword)
 
 	// Save to database
 	if err := s.userRepo.Create(ctx, user); err != nil {
